@@ -1,20 +1,25 @@
-const bcrypt = require('bcryptjs')
-const User = require('../models/user.model');
-const jwt = require('jsonwebtoken');
+import bcrypt from 'bcryptjs';
+import User from '../models/user.model';
+import { Request, Response } from "express";
+import IRequestUser from '../interfaces/requestUser.interface';
+import IUser from '../interfaces/user.interface';
+import jwt from 'jsonwebtoken';
 
-signUp = (req, res) => {
+const signUp = (req: IRequestUser, res: Response) => {
     new User({
         username: req.body.user.username,
         email: req.body.user.email,
         password: bcrypt.hashSync(req.body.user.password, 8),
         bio: '',
         image: 'https://static.productionready.io/images/smiley-cyrus.jpg'
-    }).save((err, user) => {
+    }).save((err: Error, user: IUser) => {
         if (err) {
             res.status(422).send({ errors: { body: err } })
             return
-        }
-        const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
+        };
+
+        const nodeEnv: string = (process.env.JWT_SECRET as string);
+        const token = jwt.sign({ username: user.username }, nodeEnv, {
             expiresIn: 3600
         });
         res.status(201).send({
@@ -29,7 +34,7 @@ signUp = (req, res) => {
     })
 };
 
-signIn = (req, res) => {
+const signIn = (req: IRequestUser, res: Response) => {
     return User.findOne({
         email: req.body.user.email
     })
@@ -45,8 +50,10 @@ signIn = (req, res) => {
                     accessToken: null,
                     message: 'Cannot authorize'
                 });
-            }
-            const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
+            };
+
+            const nodeEnv: string = (process.env.JWT_SECRET as string);
+            const token = jwt.sign({ username: user.username }, nodeEnv, {
                 expiresIn: 3600
             });
             res.status(200).send({
@@ -59,12 +66,12 @@ signIn = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-getUser = (req, res) => {
+const getUser = (req: IRequestUser, res: Response) => {
     return User.findOne({
         username: req.user.username
     })
@@ -80,20 +87,17 @@ getUser = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-updateUser = (req, res) => {
+const updateUser = (req: IRequestUser, res: Response) => {
     return User.findOne({
         username: req.user.username
     })
         .exec()
         .then(user => {
-            console.log(req.body);
-            console.log(req.user);
-            console.log(req.headers.authorization);
             if (typeof req.body.user.username !== 'undefined') {
                 user.username = req.body.user.username;
             }
@@ -107,7 +111,8 @@ updateUser = (req, res) => {
                 user.image = req.body.user.image;
             }
             user.save();
-            const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, {
+            const nodeEnv: string = (process.env.JWT_SECRET as string);
+            const token = jwt.sign({ username: user.username }, nodeEnv, {
             expiresIn: 3600
         });
             res.status(200).send({
@@ -120,12 +125,12 @@ updateUser = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-module.exports = {
+export default {
     signUp,
     signIn,
     getUser,

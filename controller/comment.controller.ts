@@ -1,7 +1,7 @@
-// const db = require('../models');
 import { Request, Response } from "express";
 import Article from '../models/article.model';
 import IRequestUser from '../interfaces/requestUser.interface';
+import IComment from '../interfaces/comment.interface';
 import Comment from '../models/comment.model';
 
 
@@ -11,7 +11,7 @@ const getComments = (req: Request, res: Response) => {
     })
     .exec()
         .then(article => {
-        const commentsArray = article.comments.map(val => val.comment);
+        const commentsArray = article.comments.map((val: IComment) => val.comment);
         res.status(200).send({
             comments: commentsArray
         })
@@ -62,7 +62,7 @@ const deleteComment = (req: IRequestUser, res: Response) => {
     })
         .exec()
         .then((article) => {
-            const filteredComments = article.comments.filter(val => val.comment.author.username === req.user.username)
+            const filteredComments = article.comments.filter((val: IComment) => val.comment.author.username === req.user.username)
             if (filteredComments.length) {
                 article.comments.remove(req.params.id);
             } else { res.status(401).send({ errors: { body: 'Unauthorized' } }) }

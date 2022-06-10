@@ -1,12 +1,19 @@
 require('dotenv').config();
-const express = require('express');
+import express from 'express';
 import { Request, Response, NextFunction } from "express";
 const db = require('./models');
+
+
 const server_port = process.env.SERVER_PORT || 3000;
 
 const app = express();
 
 app.use(express.json());
+// 
+import routes from './routes/routs';
+app.use(routes);
+// 
+
 app.use(express.urlencoded({ extended: true }));
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -20,10 +27,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 
-require('./routes/user.router')(app);
-require('./routes/article.router')(app);
-require('./routes/profile.router')(app);
-require('./routes/comment.router')(app);
+
+// require('./routes/user.router')(app);
+// import userRoutes from './routes/user.router';
+// userRoutes(app);
+// require('./routes/article.router')(app);
+// require('./routes/profile.router')(app);
+// require('./routes/comment.router')(app);
 
 db.mongoose.connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.DB_NAME}`).then(() => {
     console.log(`Successfully connected to MongoDB port: ${process.env.MONGO_PORT}`)

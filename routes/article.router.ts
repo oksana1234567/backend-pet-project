@@ -1,4 +1,3 @@
-
 import checkArticleExists from '../middleware/newArticle.middleware';
 import postArticle from "../controller/article.controller";
 import getArticle from "../controller/article.controller";
@@ -9,17 +8,6 @@ import getArticlesFeed from "../controller/article.controller";
 import favoriteArticle from "../controller/article.controller";
 import unFavoriteArticle from "../controller/article.controller";
 import getTags from "../controller/article.controller";
-// import {
-//     postArticle,
-//     getArticle,
-//     updateArticle,
-//     getArticles,
-//     deleteArticle,
-//     getArticlesFeed,
-//     favoriteArticle,
-//     unFavoriteArticle,
-//     getTags
-// } from '../controller/article.controller';
 import verifyAuthorization from '../middleware/authorization.middlware';
 
 export default (app: any) => {
@@ -32,4 +20,4 @@ export default (app: any) => {
     app.get('/api/articles', getArticles),
     app.delete('/api/articles/:slug', [verifyAuthorization], deleteArticle),
     app.get('/api/tags', getTags)
-}
+};

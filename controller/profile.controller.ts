@@ -1,7 +1,10 @@
 
-const User = require('../models/user.model');
+import User from '../models/user.model';
+import { Request, Response } from "express";
+import IRequestUser from '../interfaces/requestUser.interface';
+import IUser from '../interfaces/user.interface';
 
-getProfile = (req, res) => {
+const getProfile = (req: Request, res: Response) => {
     return User.findOne({
         username: req.params.username
     })
@@ -16,13 +19,13 @@ getProfile = (req, res) => {
             }
         })
     })
-    .catch((err) => {
+    .catch((err: Error) => {
         return res.status(422).send({ errors: { body: err } });
     });
 };
 
-followProfile = (req, res) => {
-    let profileUser = {};
+const followProfile = (req: IRequestUser, res: Response) => {
+    let profileUser: IUser;
     User.findOne({
         username: req.params.username
     })
@@ -47,13 +50,13 @@ followProfile = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-unFollowProfile = (req, res) => {
-    let profileUser = {};
+const unFollowProfile = (req: IRequestUser, res: Response) => {
+    let profileUser: IUser;
     User.findOne({
         username: req.params.username
     })
@@ -78,13 +81,13 @@ unFollowProfile = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
 
-module.exports = {
+export default {
     getProfile,
     followProfile,
     unFollowProfile
