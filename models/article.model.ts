@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const User = require('../models/user.model');
+import mongoose from 'mongoose';
 
 let ArticleSchema = new mongoose.Schema({
     slug: String,
@@ -33,3 +32,8 @@ let ArticleSchema = new mongoose.Schema({
             following: [] || Boolean
     }
 });
+
+const Article = mongoose.model('Article', ArticleSchema)
+// module.exports = Article;
+export default Article;
+

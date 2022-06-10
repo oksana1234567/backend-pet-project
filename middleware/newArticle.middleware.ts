@@ -1,7 +1,7 @@
-const db = require('../models');
-const Article = db.article;
+import Article from '../models/article.model';
+import { Request, Response, NextFunction } from "express";
 
-checkArticleExists = (req, res, next) => {
+const checkArticleExists = (req: Request, res: Response, next: NextFunction) => {
     Article.findOne({
         title: req.body.article.title
     }).exec((err, article) => {
@@ -17,6 +17,4 @@ checkArticleExists = (req, res, next) => {
 })
 }
 
-module.exports = {
-    checkArticleExists
-}
+export default checkArticleExists;

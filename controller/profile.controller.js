@@ -1,4 +1,4 @@
-const db = require('../models');
+
 const User = require('../models/user.model');
 
 getProfile = (req, res) => {

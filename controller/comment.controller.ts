@@ -1,10 +1,11 @@
-const db = require('../models');
-const Article = db.article;
-const User = require('../models/user.model');
-const Comment = require('../models/comment.model');
+// const db = require('../models');
+import { Request, Response } from "express";
+import Article from '../models/article.model';
+import IRequestUser from '../interfaces/requestUser.interface';
+import Comment from '../models/comment.model';
 
 
-getComments = (req, res) => {
+const getComments = (req: Request, res: Response) => {
     return Article.findOne({
         slug: req.params.slug
     })
@@ -15,12 +16,12 @@ getComments = (req, res) => {
             comments: commentsArray
         })
     })
-    .catch((err) => {
+    .catch((err: Error) => {
         return res.status(422).send({ errors: { body: err } });
     });
 };
 
-postComment = (req, res) => {
+const postComment = (req: IRequestUser, res: Response) => {
     return Article.findOne({
         slug: req.params.slug
     })
@@ -50,12 +51,12 @@ postComment = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(404).send({ errors: { body: err } });
         });
 };
 
-deleteComment = (req, res) => {
+const deleteComment = (req: IRequestUser, res: Response) => {
     return Article.findOne({
         slug: req.params.slug
     })
@@ -68,12 +69,12 @@ deleteComment = (req, res) => {
             article.save();
             res.status(200).send();
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(404).send({ errors: { body: err } });
         });
 };
 
-module.exports = {
+export default {
     getComments,
     postComment,
     deleteComment

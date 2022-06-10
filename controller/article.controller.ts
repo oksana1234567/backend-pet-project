@@ -1,9 +1,11 @@
-const db = require('../models');
-const Article = db.article;
-const User = require('../models/user.model');
-const slug = require('slug');
+import User from '../models/user.model';
+import Article from '../models/article.model';
+import IRequestUser from '../interfaces/requestUser.interface';
+import IArticle from '../interfaces/article.interface';
+import { Request, Response } from "express";
+import slug from 'slug';
 
-postArticle = (req, res) => {
+const postArticle = (req: IRequestUser, res: Response) => {
     return new Article({
         slug: slug(req.body.article.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36),
         title: req.body.article.title,
@@ -23,7 +25,7 @@ postArticle = (req, res) => {
             following: req.user.following
         }
     }
-    ).save((err, article) => {
+    ).save((err: Error, article: IArticle) => {
         if (err) {
             res.status(422).send({ errors: { body: err } })
             return;
@@ -47,7 +49,7 @@ postArticle = (req, res) => {
     })
 };
 
-getArticle = (req, res) => {
+const getArticle = (req: Request, res: Response) => {
     return Article.findOne({
         slug: req.params.slug
     })
@@ -70,12 +72,12 @@ getArticle = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-updateArticle = (req, res) => {
+const updateArticle = (req: IRequestUser, res: Response) => {
     return Article.findOne({
         slug: req.params.slug
     })
@@ -112,12 +114,12 @@ updateArticle = (req, res) => {
                 }
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-getArticles = (req, res) => {
+const getArticles = (req: Request, res: Response) => {
     return Article.find({})
         .then(articles => {
             res.status(200).send({
@@ -125,12 +127,12 @@ getArticles = (req, res) => {
                 articlesCount: articles.length
             })
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-getArticlesFeed = (req, res) => {
+const getArticlesFeed = (req: IRequestUser, res: Response) => {
     return Article.find({ username: { $in: req.user.following.map(value => value.username) } })
         .exec()
         .then(articles => {
@@ -144,7 +146,7 @@ getArticlesFeed = (req, res) => {
         });
 };
 
-deleteArticle = (req, res) => {
+const deleteArticle = (req: IRequestUser, res: Response) => {
     return Article.findOne({
         slug: req.params.slug
     })
@@ -155,14 +157,14 @@ deleteArticle = (req, res) => {
             } else { res.status(401).send({ error: 'unauthorized' }) }
             res.status(200).send()
         })
-        .catch((err) => {
+        .catch((err: Error) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
 
-favoriteArticle = (req, res) => {
+const favoriteArticle = (req: IRequestUser, res: Response) => {
     let favorited = false;
-    let slugs = [];
+    let slugs = [String];
 
     return Article.findOne({
         slug: req.params.slug
@@ -173,7 +175,9 @@ favoriteArticle = (req, res) => {
                 username: req.user.username
             }).exec()
                 .then((user) => {
-                    user.favorites.map(val => slugs.push(val.article.slug));
+                    user.favorites.map((val: typeof article ) => {
+                        return slugs.push(val.article.slug)
+                    });
                     favorited = slugs.includes(article.slug);
                     if (!favorited) {
                         user.favorites.push({ article: article });
@@ -198,7 +202,7 @@ favoriteArticle = (req, res) => {
                             author: article.author,
                         }
                     })
-                }).catch((err) => {
+                }).catch((err: Error) => {
                     return res.status(422).send({ errors: { body: err } });
                 });
         })
@@ -207,9 +211,9 @@ favoriteArticle = (req, res) => {
     });
 };
 
-unFavoriteArticle = (req, res) => {
+const unFavoriteArticle = (req: IRequestUser, res: Response) => {
     let favorited = false;
-    let slugs = [];
+    let slugs = [String];
 
     return Article.findOne({
         slug: req.params.slug
@@ -219,10 +223,10 @@ unFavoriteArticle = (req, res) => {
                 username: req.user.username
             }).exec()
                 .then((user) => {
-                    user.favorites.map(val => slugs.push(val.article.slug));
+                    user.favorites.map((val: typeof article) => slugs.push(val.article.slug));
                     favorited = slugs.includes(article.slug);
                     if (favorited) {
-                        user.favorites = user.favorites.filter(val => val.article.slug !== req.params.slug)
+                        user.favorites = user.favorites.filter((val: typeof article) => val.article.slug !== req.params.slug)
                         user.save();
                         article.favorited = false;
                         article.favoritesCount -= 1;
@@ -244,7 +248,7 @@ unFavoriteArticle = (req, res) => {
                             author: article.author,
                         }
                     })
-                }).catch((err) => {
+                }).catch((err: Error) => {
                     return res.status(422).send({ errors: { body: err } });
                 });
         })
@@ -253,16 +257,16 @@ unFavoriteArticle = (req, res) => {
         });
 };
 
-getTags = (req, res) => {
+const getTags = (req: Request, res: Response) => {
     return Article.find().distinct('tagList')
         .exec()
         .then(tags => res.status(200).send({
             tags: tags,
         }))
-        .catch(err => res.status(422).send({ errors: { body: err } }));
+        .catch((err: Error) => res.status(422).send({ errors: { body: err } }));
 };
 
-module.exports = {
+export default {
     postArticle,
     getArticle,
     updateArticle,
@@ -273,4 +277,3 @@ module.exports = {
     unFavoriteArticle,
     getTags
 }
-

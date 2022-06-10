@@ -1,8 +1,10 @@
-const db = require('../models');
-const User = db.user;
-const jwt = require('jsonwebtoken')
 
-const verifyToken = (req, res, next) => {
+import User from '../models/user.model';
+import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from "express";
+import IRequestUser from '../interfaces/requestUser.interface';
+
+const verifyAuthorization = (req: IRequestUser, res: Response, next: NextFunction) => {
     let token = '';
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Token' ||
         req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -11,9 +13,11 @@ const verifyToken = (req, res, next) => {
 
     if (!token) {
         return res.status(403).send({ errors: { body: ['No token provided'] }  })
-    }
+    };
 
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    const nodeEnv: string = (process.env.JWT_SECRET as string);
+    
+    jwt.verify(token, nodeEnv, async (err, decoded: any) => {
         if (err) {
             return res.status(401).send({ errors: { body: ['Unauthorized'] }  })
         }
@@ -24,6 +28,4 @@ const verifyToken = (req, res, next) => {
     })
 }
 
-module.exports = {
-    verifyToken
-}
+export default verifyAuthorization;

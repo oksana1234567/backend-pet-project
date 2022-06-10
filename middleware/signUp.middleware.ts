@@ -1,7 +1,7 @@
-const db = require('../models');
-const User = db.user;
+import User from '../models/user.model';
+import { Request, Response, NextFunction } from "express";
 
-checkUserExists = (req, res, next) => {
+const checkUserExists = (req: Request, res: Response, next: NextFunction) => {
     User.findOne({
         username: req.body.username
     }).exec((err, user) => {
