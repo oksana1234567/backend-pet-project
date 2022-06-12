@@ -1,7 +1,7 @@
 import Article from '../models/article.model';
 import { Request, Response, NextFunction } from "express";
 
-const checkArticleExists = (req: Request, res: Response, next: NextFunction) => {
+export const checkArticleExists = (req: Request, res: Response, next: NextFunction) => {
     Article.findOne({
         title: req.body.article.title
     }).exec((err, article) => {
@@ -16,5 +16,3 @@ const checkArticleExists = (req: Request, res: Response, next: NextFunction) => 
         next();
     })
 };
-
-export default checkArticleExists;

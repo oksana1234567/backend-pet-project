@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from "express";
 import IRequestUser from '../interfaces/requestUser.interface';
 
-const verifyAuthorization = (req: IRequestUser, res: Response, next: NextFunction) => {
+export const verifyAuthorization = (req: IRequestUser, res: Response, next: NextFunction) => {
     let token = '';
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Token' ||
         req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -27,5 +27,3 @@ const verifyAuthorization = (req: IRequestUser, res: Response, next: NextFunctio
         next();
     })
 };
-
-export default verifyAuthorization;

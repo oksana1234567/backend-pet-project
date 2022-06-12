@@ -1,10 +1,11 @@
-import getComments from '../controller/comment.controller';
-import postComment from '../controller/comment.controller';
-import deleteComment from '../controller/comment.controller';
-import verifyAuthorization from '../middleware/authorization.middlware';
+import { getComments, postComment, deleteComment } from '../controller/comment.controller';
+import { verifyAuthorization } from '../middleware/authorization.middlware';
+import { Router } from 'express';
 
-export default (app: any) => {
-    app.get('/api/articles/:slug/comments', getComments),
-    app.post('/api/articles/:slug/comments', [verifyAuthorization], postComment),
-    app.delete('/api/articles/:slug/comments/:id', [verifyAuthorization], deleteComment)
-};
+const router = Router();
+
+router.route('/articles/:slug/comments').get(getComments);
+router.route('/articles/:slug/comments').all(verifyAuthorization).post(postComment);
+router.route('/articles/:slug/comments/:id').all(verifyAuthorization).delete(deleteComment);
+
+export default router;

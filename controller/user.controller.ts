@@ -5,7 +5,7 @@ import IRequestUser from '../interfaces/requestUser.interface';
 import IUser from '../interfaces/user.interface';
 import jwt from 'jsonwebtoken';
 
-const signUp = (req: IRequestUser, res: Response) => {
+export const signUp = (req: IRequestUser, res: Response) => {
     new User({
         username: req.body.user.username,
         email: req.body.user.email,
@@ -34,7 +34,7 @@ const signUp = (req: IRequestUser, res: Response) => {
     })
 };
 
-const signIn = (req: IRequestUser, res: Response) => {
+export const signIn = (req: IRequestUser, res: Response) => {
     return User.findOne({
         email: req.body.user.email
     })
@@ -71,30 +71,30 @@ const signIn = (req: IRequestUser, res: Response) => {
         });
 };
 
-const getUser = (req: IRequestUser, res: Response) => {
-    return User.findOne({
-        username: req.user.username
-    })
-        .exec()
-        .then(user => {
-            res.status(200).send({
-                user: {
-                    username: user.username,
-                    bio: user.bio,
-                    image: user.image,
-                    email: user.email,
-                    token: req.headers.authorization,
-                }
-            })
+export const getUser = (req: IRequestUser, res: Response) => {
+        return User.findOne({
+            username: req.user!.username
         })
-        .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err } });
-        });
+            .exec()
+            .then((user: IUser) => {
+                res.status(200).send({
+                    user: {
+                        username: user.username,
+                        bio: user.bio,
+                        image: user.image,
+                        email: user.email,
+                        token: req.headers.authorization,
+                    }
+                })
+            })
+            .catch((err: Error) => {
+                return res.status(422).send({ errors: { body: err } });
+            })
 };
 
-const updateUser = (req: IRequestUser, res: Response) => {
+export const updateUser = (req: IRequestUser, res: Response) => {
     return User.findOne({
-        username: req.user.username
+        username: req.user!.username
     })
         .exec()
         .then(user => {
@@ -129,10 +129,3 @@ const updateUser = (req: IRequestUser, res: Response) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
-
-export default {
-    signUp,
-    signIn,
-    getUser,
-    updateUser
-}

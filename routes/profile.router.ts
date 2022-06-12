@@ -1,10 +1,11 @@
-import getProfile from '../controller/profile.controller';
-import followProfile from '../controller/profile.controller';
-import unFollowProfile from '../controller/profile.controller';
-import verifyAuthorization from '../middleware/authorization.middlware';
+import { getProfile, followProfile, unFollowProfile } from '../controller/profile.controller';
+import { verifyAuthorization } from '../middleware/authorization.middlware';
+import { Router } from 'express';
 
-export default (app: any) => {
-    app.get('/api/profiles/:username', getProfile),
-    app.post('/api/profiles/:username/follow', [verifyAuthorization], followProfile),
-    app.delete('/api/profiles/:username/follow', [verifyAuthorization], unFollowProfile)
-};
+const router = Router();
+
+router.route('/profiles/:username').get(getProfile);
+router.route('/profiles/:username/follow').all(verifyAuthorization).post(followProfile);
+router.route('/profiles/:username/follow').all(verifyAuthorization).delete(followProfile);
+
+export default router;

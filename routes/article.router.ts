@@ -1,23 +1,18 @@
-import checkArticleExists from '../middleware/newArticle.middleware';
-import postArticle from "../controller/article.controller";
-import getArticle from "../controller/article.controller";
-import updateArticle from "../controller/article.controller";
-import getArticles from "../controller/article.controller";
-import deleteArticle from "../controller/article.controller";
-import getArticlesFeed from "../controller/article.controller";
-import favoriteArticle from "../controller/article.controller";
-import unFavoriteArticle from "../controller/article.controller";
-import getTags from "../controller/article.controller";
-import verifyAuthorization from '../middleware/authorization.middlware';
+import { checkArticleExists } from '../middleware/newArticle.middleware';
+import { getArticlesFeed, getArticles, favoriteArticle, unFavoriteArticle, postArticle, getArticle, updateArticle, deleteArticle, getTags } from "../controller/article.controller";
+import { verifyAuthorization } from '../middleware/authorization.middlware';
+import { Router } from 'express';
 
-export default (app: any) => {
-    app.get('/api/articles/feed', [verifyAuthorization], getArticlesFeed),
-    app.post('/api/articles/:slug/favorite', [verifyAuthorization], favoriteArticle),
-    app.delete('/api/articles/:slug/favorite', [verifyAuthorization], unFavoriteArticle),
-    app.post('/api/articles', [checkArticleExists, verifyAuthorization], postArticle),
-    app.get('/api/articles/:slug', getArticle),
-    app.put('/api/articles/:slug', [verifyAuthorization], updateArticle),
-    app.get('/api/articles', getArticles),
-    app.delete('/api/articles/:slug', [verifyAuthorization], deleteArticle),
-    app.get('/api/tags', getTags)
-};
+const router = Router();
+
+router.route('/articles/feed').all(verifyAuthorization).get(getArticlesFeed);
+router.route('/articles/:slug/favorite').all(verifyAuthorization).post(favoriteArticle);
+router.route('/articles/:slug/favorite').all(verifyAuthorization).delete(unFavoriteArticle);
+router.route('/articles').get(getArticles); 
+router.route('/articles').all([verifyAuthorization, checkArticleExists]).post(postArticle);
+router.route('/articles/:slug').get(getArticle);
+router.route('/articles/:slug').all(verifyAuthorization).post(updateArticle);
+router.route('/articles/:slug').all(verifyAuthorization).delete(deleteArticle);
+router.route('/tags').get(getTags);
+
+export default router;

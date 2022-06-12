@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import IRequestUser from '../interfaces/requestUser.interface';
 import IUser from '../interfaces/user.interface';
 
-const getProfile = (req: Request, res: Response) => {
+export const getProfile = (req: Request, res: Response) => {
     return User.findOne({
         username: req.params.username
     })
@@ -24,7 +24,7 @@ const getProfile = (req: Request, res: Response) => {
     });
 };
 
-const followProfile = (req: IRequestUser, res: Response) => {
+export const followProfile = (req: IRequestUser, res: Response) => {
     let profileUser: IUser;
     User.findOne({
         username: req.params.username
@@ -35,7 +35,7 @@ const followProfile = (req: IRequestUser, res: Response) => {
             return res.status(422).send({ errors: { body: err } });
         });
     return User.findOne({
-        username: req.user.username
+        username: req.user!.username
     })
         .exec()
         .then(user => {
@@ -55,7 +55,7 @@ const followProfile = (req: IRequestUser, res: Response) => {
         });
 };
 
-const unFollowProfile = (req: IRequestUser, res: Response) => {
+export const unFollowProfile = (req: IRequestUser, res: Response) => {
     let profileUser: IUser;
     User.findOne({
         username: req.params.username
@@ -66,7 +66,7 @@ const unFollowProfile = (req: IRequestUser, res: Response) => {
             return res.status(422).send({ errors: { body: err } });
         });
     return User.findOne({
-        username: req.user.username
+        username: req.user!.username
     })
         .exec()
         .then(user => {
@@ -85,10 +85,3 @@ const unFollowProfile = (req: IRequestUser, res: Response) => {
             return res.status(422).send({ errors: { body: err } });
         });
 };
-
-
-export default {
-    getProfile,
-    followProfile,
-    unFollowProfile
-}

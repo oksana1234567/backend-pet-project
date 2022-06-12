@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 interface IRequestUser extends Request {
-    user: {
+    user?: {
     username: String,
     email: String,
     password: String,
@@ -10,7 +10,7 @@ interface IRequestUser extends Request {
     favorites: Array<any>,
     following: Array<any>,
     },
-    token: String,
+    token?: String,
 };
 
 export default IRequestUser;

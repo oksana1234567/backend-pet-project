@@ -1,16 +1,14 @@
 
-import checkUserExists from '../middleware/signUp.middleware';
-import signIn from '../controller/user.controller';
-import signUp from '../controller/user.controller';
-import getUser from '../controller/user.controller';
-import updateUser from '../controller/user.controller';
-const {verifyAuthorization} = require('../middleware/authorization.middlware')
+import { checkUserExists } from '../middleware/signUp.middleware';
+import { verifyAuthorization } from '../middleware/authorization.middlware';
+import { signIn, signUp, getUser, updateUser } from '../controller/user.controller';
+import { Router } from 'express';
 
-const userRoutes = (app: any) => {
-    app.post('/api/users', [checkUserExists], signUp),
-    app.post('/api/users/login', signIn),
-    app.get('/api/user', [verifyAuthorization], getUser),
-    app.put('/api/user', [verifyAuthorization], updateUser)
-};
+const router = Router();
 
-export default userRoutes;
+router.route('/user').all(verifyAuthorization).get(getUser);
+router.route('/users').all(checkUserExists).post(signUp);
+router.route('/users/login').post(signIn);
+router.route('/user').all(verifyAuthorization).put(updateUser);
+
+export default router;

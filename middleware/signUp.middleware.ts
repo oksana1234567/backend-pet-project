@@ -1,7 +1,7 @@
 import User from '../models/user.model';
 import { Request, Response, NextFunction } from "express";
 
-const checkUserExists = (req: Request, res: Response, next: NextFunction) => {
+export const checkUserExists = (req: Request, res: Response, next: NextFunction) => {
     User.findOne({
         username: req.body.username
     }).exec((err, user) => {
@@ -28,5 +28,3 @@ const checkUserExists = (req: Request, res: Response, next: NextFunction) => {
         })
     })
 };
-
-export default checkUserExists;
