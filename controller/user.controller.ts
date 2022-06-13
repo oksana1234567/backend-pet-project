@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model';
-import { Request, Response } from "express";
+import { Response } from "express";
 import IRequestUser from '../interfaces/requestUser.interface';
-import IUser from '../interfaces/user.interface';
-import jwt from 'jsonwebtoken';
+import { IUser } from '../interfaces/user.interface';
+import { createToken } from '../shared/services/createToken.service';
 
 export const signUp = (req: IRequestUser, res: Response) => {
     new User({
@@ -14,22 +14,11 @@ export const signUp = (req: IRequestUser, res: Response) => {
         image: 'https://static.productionready.io/images/smiley-cyrus.jpg'
     }).save((err: Error, user: IUser) => {
         if (err) {
-            res.status(422).send({ errors: { body: err } })
+            res.status(422).send({ errors: { body: err.message } })
             return
         };
-
-        const nodeEnv: string = (process.env.JWT_SECRET as string);
-        const token = jwt.sign({ username: user.username }, nodeEnv, {
-            expiresIn: 3600
-        });
         res.status(201).send({
-            user: {
-                username: user.username,
-                email: user.email,
-                token: token,
-                bio: "",
-                image: "https://static.productionready.io/images/smiley-cyrus.jpg"
-            }
+            user: {...user.sendAsUserResult(user), token: createToken(user.username)}
         })
     })
 };
@@ -51,23 +40,12 @@ export const signIn = (req: IRequestUser, res: Response) => {
                     message: 'Cannot authorize'
                 });
             };
-
-            const nodeEnv: string = (process.env.JWT_SECRET as string);
-            const token = jwt.sign({ username: user.username }, nodeEnv, {
-                expiresIn: 3600
-            });
             res.status(200).send({
-                user: {
-                    username: user.username,
-                    email: user.email,
-                    token: token,
-                    bio: "",
-                    image: "https://static.productionready.io/images/smiley-cyrus.jpg"
-                }
+                user: {...user.sendAsUserResult(user), token: createToken(user.username)}
             })
         })
         .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err } });
+            return res.status(422).send({ errors: { body: err.message } });
         });
 };
 
@@ -78,17 +56,11 @@ export const getUser = (req: IRequestUser, res: Response) => {
             .exec()
             .then((user: IUser) => {
                 res.status(200).send({
-                    user: {
-                        username: user.username,
-                        bio: user.bio,
-                        image: user.image,
-                        email: user.email,
-                        token: req.headers.authorization,
-                    }
+                    user: {...user.sendAsUserResult(user), token: req.headers.authorization}
                 })
             })
             .catch((err: Error) => {
-                return res.status(422).send({ errors: { body: err } });
+                return res.status(422).send({ errors: { body: err.message } });
             })
 };
 
@@ -111,21 +83,11 @@ export const updateUser = (req: IRequestUser, res: Response) => {
                 user.image = req.body.user.image;
             }
             user.save();
-            const nodeEnv: string = (process.env.JWT_SECRET as string);
-            const token = jwt.sign({ username: user.username }, nodeEnv, {
-            expiresIn: 3600
-        });
             res.status(200).send({
-                user: {
-                    username: user.username,
-                    email: user.email,
-                    token: token,
-                    bio: user.bio,
-                    image: user.image
-                }
+                user: {...user.sendAsUserResult(user), token: createToken(user.username)}
             })
         })
         .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err } });
+            return res.status(422).send({ errors: { body: err.message } });
         });
 };

@@ -29,6 +29,10 @@ app.use('/api', ArticleRoutes);
 app.use('/api', CommentRoutes);
 app.use('/api', ProfileRoutes);
 
+app.get("/", (req, res) => {
+  res.status(200).send("Hello World!");
+});
+
 db.mongoose.connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.DB_NAME}`).then(() => {
     console.log(`Successfully connected to MongoDB port: ${process.env.MONGO_PORT}`)
 }).catch((err: Error) => console.log(`Failed connected to MongoDB port: ${process.env.MONGO_PORT}`, err));
@@ -36,3 +40,5 @@ db.mongoose.connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_POR
 app.listen(server_port, () => {
     console.log('Server running on port: ' + server_port);
 });
+
+export default app;

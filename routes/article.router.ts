@@ -11,7 +11,7 @@ router.route('/articles/:slug/favorite').all(verifyAuthorization).delete(unFavor
 router.route('/articles').get(getArticles); 
 router.route('/articles').all([verifyAuthorization, checkArticleExists]).post(postArticle);
 router.route('/articles/:slug').get(getArticle);
-router.route('/articles/:slug').all(verifyAuthorization).post(updateArticle);
+router.route('/articles/:slug').all(verifyAuthorization).put(updateArticle);
 router.route('/articles/:slug').all(verifyAuthorization).delete(deleteArticle);
 router.route('/tags').get(getTags);
 

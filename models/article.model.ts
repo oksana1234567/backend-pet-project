@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import IArticle from '../interfaces/article.interface';
 
 let ArticleSchema = new mongoose.Schema({
-    slug: String,
-    title: String,
-    description: String,
-    body: String,
+    slug: String, 
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    body: { type: String, required: true },
     tagList: [String],
     createdAt: String,
     updatedAt: String,
@@ -32,6 +33,23 @@ let ArticleSchema = new mongoose.Schema({
             following: [] || Boolean
     }
 });
+
+ArticleSchema.methods.sendAsResult = function(article: IArticle) {
+  return {
+        slug: article.slug,
+        title: article.title,
+        description: article.description,
+        body: article.body,
+        tagList: [
+            ...article.tagList
+        ],
+        createdAt: article.createdAt,
+        updatedAt: article.updatedAt,
+        favorited: article.favorited,
+        favoritesCount: article.favoritesCount,
+        author: article.author,
+        }
+  };
 
 const Article = mongoose.model('Article', ArticleSchema);
 

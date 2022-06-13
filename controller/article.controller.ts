@@ -3,16 +3,18 @@ import Article from '../models/article.model';
 import IRequestUser from '../interfaces/requestUser.interface';
 import IArticle from '../interfaces/article.interface';
 import { Request, Response } from "express";
-import slug from 'slug';
+import {updateDate} from '../shared/services/updateDate.service'
+import { slugify } from '../shared/services/slugify.service';
+import { checkFavorite, manageModelsChangesFavorite, manageModelsChangesUnFavorite } from '../shared/services/favorite.service';
 
 export const postArticle = (req: IRequestUser, res: Response) => {
         return new Article({
-            slug: slug(req.body.article.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36),
+            slug: slugify(req.body.article.title),
             title: req.body.article.title,
             description: req.body.article.description,
             body: req.body.article.body,
             tagList: [
-                ...req.body.article.tagList
+                req.body.article.tagList
             ],
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -27,24 +29,11 @@ export const postArticle = (req: IRequestUser, res: Response) => {
         }
         ).save((err: Error, article: IArticle) => {
             if (err) {
-                res.status(422).send({ errors: { body: err } })
+                res.status(422).send({ errors: { body: err.message } })
                 return;
             }
             res.status(201).send({
-                article: {
-                    slug: article.slug,
-                    title: article.title,
-                    description: article.description,
-                    body: article.body,
-                    tagList: [
-                        ...article.tagList
-                    ],
-                    createdAt: article.createdAt,
-                    updatedAt: article.updatedAt,
-                    favorited: article.favorited,
-                    favoritesCount: article.favoritesCount,
-                    author: article.author,
-                }
+                article: article.sendAsResult(article)
             })
         })
 };
@@ -56,24 +45,11 @@ export const getArticle = (req: Request, res: Response) => {
         .exec()
         .then(article => {
             res.status(200).send({
-                article: {
-                    slug: article.slug,
-                    title: article.title,
-                    description: article.description,
-                    body: article.body,
-                    tagList: [
-                        ...article.tagList
-                    ],
-                    createdAt: article.createdAt,
-                    updatedAt: article.updatedAt,
-                    favorited: article.favorited,
-                    favoritesCount: article.favoritesCount,
-                    author: article.author,
-                }
+                article: article.sendAsResult(article)
             })
         })
         .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err } });
+            return res.status(422).send({ errors: { body: err.message } });
         });
 };
 
@@ -86,36 +62,24 @@ export const updateArticle = (req: IRequestUser, res: Response) => {
                 if (req.user && article.author.username === req.user.username) {
                     if (typeof req.body.article.title !== 'undefined') {
                         article.title = req.body.article.title;
-                        article.updatedAt = new Date();
+                        updateDate(article);
                     }
                     if (typeof req.body.article.description !== 'undefined') {
                         article.description = req.body.article.description;
-                        article.updatedAt = new Date();
+                        updateDate(article);
                     }
                     if (typeof req.body.article.description !== 'undefined') {
                         article.body = req.body.article.body;
-                        article.updatedAt = new Date();
+                        updateDate(article);
                     }
                     article.save();
                 } else { res.status(401).send({ error: 'unauthorized' }) }
                 res.status(200).send({
-                    article: {
-                        slug: article.slug,
-                        title: article.title,
-                        description: article.description,
-                        body: article.body,
-                        tagList: [
-                            ...article.tagList
-                        ],
-                        createdAt: article.createdAt,
-                        updatedAt: article.updatedAt,
-                        favoritesCount: article.favoritesCount,
-                        author: article.author,
-                    }
+                    article: article.sendAsResult(article)
                 })
             })
             .catch((err: Error) => {
-                return res.status(422).send({ errors: { body: err } });
+                return res.status(422).send({ errors: { body: err.message } });
             });
 };
 
@@ -146,7 +110,7 @@ export const getArticles = (req: Request, res: Response) => {
             })
         })
         .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err } });
+            return res.status(422).send({ errors: { body: err.message } });
         });
 };
 
@@ -162,7 +126,7 @@ export const getArticlesFeed = (req: IRequestUser, res: Response) => {
         offset = Number(req.query.offset);
     }
 
-    return Article.find({ username: { $in: req.user!.following.map(value => value.username) } })
+    return Article.find({ username: { $in: req.user!.following.map(value => {if (value) { return value.username } }) } })
             .limit(limit)
             .skip(offset)
             .exec()
@@ -172,8 +136,8 @@ export const getArticlesFeed = (req: IRequestUser, res: Response) => {
                     articlesCount: articles.length
                 })
             })
-            .catch((err) => {
-                return res.status(422).send({ errors: { body: err } });
+            .catch((err: Error) => {
+                return res.status(422).send({ errors: { body: err.message } });
             });
 };
 
@@ -189,14 +153,11 @@ export const deleteArticle = (req: IRequestUser, res: Response) => {
                 res.status(200).send()
             })
             .catch((err: Error) => {
-                return res.status(422).send({ errors: { body: err } });
+                return res.status(422).send({ errors: { body: err.message } });
             });
 };
 
 export const favoriteArticle = (req: IRequestUser, res: Response) => {
-    let favorited = false;
-    let slugs = [String];
-
         return Article.findOne({
             slug: req.params.slug
         })
@@ -206,46 +167,24 @@ export const favoriteArticle = (req: IRequestUser, res: Response) => {
                         username: req.user!.username
                     }).exec()
                         .then((user) => {
-                            user.favorites.map((val: typeof article) => {
-                                return slugs.push(val.article.slug)
-                            });
-                            favorited = slugs.includes(article.slug);
-                            if (!favorited) {
-                                user.favorites.push({ article: article });
+                            if (!checkFavorite(user, article)) {
+                                manageModelsChangesFavorite(user, article);
                                 user.save();
-                                article.favorited = true;
-                                article.favoritesCount += 1;
                                 article.save();
                             }
                             res.status(200).send({
-                                article: {
-                                    slug: article.slug,
-                                    title: article.title,
-                                    description: article.description,
-                                    body: article.body,
-                                    tagList: [
-                                        ...article.tagList
-                                    ],
-                                    createdAt: article.createdAt,
-                                    updatedAt: article.updatedAt,
-                                    favorited: article.favorited,
-                                    favoritesCount: article.favoritesCount,
-                                    author: article.author,
-                                }
+                                article: article.sendAsResult(article)
                             })
                         }).catch((err: Error) => {
-                            return res.status(422).send({ errors: { body: err } });
+                            return res.status(422).send({ errors: { body: err.message } });
                         });
                 })
-            .catch((err) => {
-                return res.status(422).send({ errors: { body: err } });
+            .catch((err: Error) => {
+                return res.status(422).send({ errors: { body: err.message } });
             });
 };
 
 export const unFavoriteArticle = (req: IRequestUser, res: Response) => {
-    let favorited = false;
-    let slugs = [String];
-
         return Article.findOne({
             slug: req.params.slug
         }).exec()
@@ -254,33 +193,16 @@ export const unFavoriteArticle = (req: IRequestUser, res: Response) => {
                         username: req.user!.username
                     }).exec()
                         .then((user) => {
-                            user.favorites.map((val: typeof article) => slugs.push(val.article.slug));
-                            favorited = slugs.includes(article.slug);
-                            if (favorited) {
-                                user.favorites = user.favorites.filter((val: typeof article) => val.article.slug !== req.params.slug)
+                            if (checkFavorite(user, article)) {
+                                manageModelsChangesUnFavorite(user, article, req.params.slug);
                                 user.save();
-                                article.favorited = false;
-                                article.favoritesCount -= 1;
                                 article.save();
                             }
                             res.status(200).send({
-                                article: {
-                                    slug: article.slug,
-                                    title: article.title,
-                                    description: article.description,
-                                    body: article.body,
-                                    tagList: [
-                                        ...article.tagList
-                                    ],
-                                    createdAt: article.createdAt,
-                                    updatedAt: article.updatedAt,
-                                    favorited: article.favorited,
-                                    favoritesCount: article.favoritesCount,
-                                    author: article.author,
-                                }
+                                article: article.sendAsResult(article)
                             })
                         }).catch((err: Error) => {
-                            return res.status(422).send({ errors: { body: err } });
+                            return res.status(422).send({ errors: { body: err.message } });
                         });
                 })
             .catch((err) => {
@@ -294,5 +216,5 @@ export const getTags = (req: Request, res: Response) => {
         .then(tags => res.status(200).send({
             tags: tags,
         }))
-        .catch((err: Error) => res.status(422).send({ errors: { body: err } }));
+        .catch((err: Error) => res.status(422).send({ errors: { body: err.message } }));
 };

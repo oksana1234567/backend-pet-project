@@ -1,6 +1,6 @@
 
 interface IArticle {
-        slug: String,
+        slug: StringConstructor,
         title: String,
         description: String,
         body: String,
@@ -8,9 +8,10 @@ interface IArticle {
         createdAt: String,
         updatedAt: String,
         favorited: Boolean,
-        favoritesCount: Number,
+        favoritesCount: number,
         comments: Array<any>,
         author: Object,
+        sendAsResult(article): any
 };
 
 export default IArticle;

@@ -1,7 +1,6 @@
 
 interface IComment {
-    comment: {
-        id: Number,
+        _id: Number,
         createdAt: String,
         updatedAt: String,
         body: String,
@@ -11,7 +10,6 @@ interface IComment {
             image: String,
             following: [] | Boolean,
         }
-    }
 };
 
 export default IComment;

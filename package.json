@@ -4,9 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.ts"
+    "test": "jest",
+    "start": "nodemon app.ts",
+    "tsc": "tsc"
   },
+    "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    }
+},
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -25,9 +36,14 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/helmet": "^4.0.0",
+    "@types/jest": "^28.1.1",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.41",
     "@types/slug": "^5.0.3",
+    "@types/supertest": "^2.0.12",
+    "jest": "^28.1.1",
+    "supertest": "^6.2.3",
+    "ts-jest": "^28.0.4",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   }
