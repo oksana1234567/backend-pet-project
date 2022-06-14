@@ -7,7 +7,7 @@ export interface IUser {
     image: String,
     favorites: Array<any>,
     following: Array<any>,
-    sendAsUserResult(user): any
+    sendAsUserResult(user: any): any
 };
 
 export interface IUserResponse {

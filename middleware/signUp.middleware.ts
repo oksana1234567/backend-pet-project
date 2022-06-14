@@ -10,7 +10,7 @@ export const checkUserExists = (req: Request, res: Response, next: NextFunction)
             return;
         }
         if (user) {
-            res.status(400).send({ erroe: "Failed, user already exists" })
+            res.status(400).send({ error: "Failed, user already exists" })
             return;
         }
         User.findOne({
@@ -21,7 +21,7 @@ export const checkUserExists = (req: Request, res: Response, next: NextFunction)
                 return;
             }
             if (user) {
-                res.status(400).send({ erroe: "Failed, user already exists" })
+                res.status(400).send({ error: "Failed, user already exists" })
                 return;
             }
             next();

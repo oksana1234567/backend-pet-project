@@ -1,7 +1,7 @@
 
 import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import IRequestUser from '../interfaces/requestUser.interface';
 
 export const verifyAuthorization = (req: IRequestUser, res: Response, next: NextFunction) => {

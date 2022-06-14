@@ -187,7 +187,8 @@ export const favoriteArticle = (req: IRequestUser, res: Response) => {
 export const unFavoriteArticle = (req: IRequestUser, res: Response) => {
         return Article.findOne({
             slug: req.params.slug
-        }).exec()
+        })
+            .exec()
             .then((article) => {
                     return User.findOne({
                         username: req.user!.username

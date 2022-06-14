@@ -24,13 +24,12 @@ let ArticleSchema = new mongoose.Schema({
                 following: [] || Boolean
             }
         }
-}],
-    author:
-    {
-            username: String,
-            bio: String,
-            image: String,
-            following: [] || Boolean
+        }],
+    author: {
+        username: String,
+        bio: String,
+        image: String,
+        following: [] || Boolean
     }
 });
 

@@ -11,7 +11,7 @@ interface IArticle {
         favoritesCount: number,
         comments: Array<any>,
         author: Object,
-        sendAsResult(article): any
+        sendAsResult(article: any): any
 };
 
 export default IArticle;

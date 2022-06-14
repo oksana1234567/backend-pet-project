@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "start": "nodemon app.ts",
+    "test": "jest --coverage",
+    "start": "nodemon server.ts",
     "tsc": "tsc"
   },
-    "jest": {
+  "jest": {
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -17,7 +17,7 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     }
-},
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -28,6 +28,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.2",
     "nodemon": "^2.0.16",
+    "sinon": "^14.0.0",
     "slug": "^5.3.0"
   },
   "devDependencies": {

@@ -1,5 +1,15 @@
 import { checkArticleExists } from '../middleware/newArticle.middleware';
-import { getArticlesFeed, getArticles, favoriteArticle, unFavoriteArticle, postArticle, getArticle, updateArticle, deleteArticle, getTags } from "../controller/article.controller";
+import {
+    getArticlesFeed,
+    getArticles,
+    favoriteArticle,
+    unFavoriteArticle,
+    postArticle,
+    getArticle,
+    updateArticle,
+    deleteArticle,
+    getTags
+} from "../controller/article.controller";
 import { verifyAuthorization } from '../middleware/authorization.middlware';
 import { Router } from 'express';
 
