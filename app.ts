@@ -1,12 +1,12 @@
 require('dotenv').config();
-const db = require('./models');
+const db = require('./src/models');
 import cors from 'cors';
 import express from 'express';
 import { Request, Response, NextFunction } from "express";
-import ArticleRoutes from './routes/article.router';
-import CommentRoutes from './routes/comment.router';
-import ProfileRoutes from './routes/profile.router';
-import UserRoutes from './routes/user.router';
+import ArticleRoutes from './src/routes/article.router';
+import CommentRoutes from './src/routes/comment.router';
+import ProfileRoutes from './src/routes/profile.router';
+import UserRoutes from './src/routes/user.router';
 
 const server_port = process.env.SERVER_PORT || 3000;
 const app = express();
