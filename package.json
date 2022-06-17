@@ -33,6 +33,7 @@
     "slug": "^5.3.0"
   },
   "devDependencies": {
+    "@jest-mock/express": "^2.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",

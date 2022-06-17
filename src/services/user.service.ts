@@ -2,10 +2,11 @@
 import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { Request } from "express";
+import { Request, Response } from "express";
 import RequestUser from '../shared/interfaces/requestUser.interface';
 import { getToken } from '../shared/helpers/authHandler/getToken';
 import { getUserByName } from '../entities/user';
+import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
 
 
 export const getUserFromRequest = (req: RequestUser) => {
@@ -31,8 +32,8 @@ export const createUserService = (req: Request) => {
     }).save()
 };
 
-export const updateUserService = (req: RequestUser) => {
-    return getUserByName(req.user!.username.toString())
+export const updateUserService = (req: RequestUser, res: Response) => {
+    getUserByName(req.user!.username.toString())
         .then(user => {
             if (typeof req.body.user.username !== 'undefined') {
                 user.username = req.body.user.username;
@@ -47,5 +48,6 @@ export const updateUserService = (req: RequestUser) => {
                 user.image = req.body.user.image;
             }
             user.save();
-        })
+        }).catch((err: Error) => errorHandler(err, res));
+    return getUserByName(req.user!.username.toString());
 };

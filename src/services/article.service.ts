@@ -7,6 +7,7 @@ import { updateDate } from '../shared/helpers/modelsFieldsHandler/updateDate';
 import { getArticleBySlug } from '../entities/article';
 import { checkFavorite, manageModelsChangesFavorite, manageModelsChangesUnFavorite } from '../shared/helpers/favoriteHandler/favorite';
 import { getUserByName } from '../entities/user';
+import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
 
 
 export const postArticleService = (req: RequestUser) => {
@@ -48,20 +49,23 @@ export const updateArticleService = (req: RequestUser, res: Response, article: A
             article.tagList = req.body.article.tagList;
             updateDate(article);
         }
-        article.save();
-    } else { res.status(401).send({ error: 'unauthorized' }) }
+         article.save();
+    } return article;
+    // else { return res.status(401).send({ error: 'unauthorized' }) }
 };
 
+// check return value
 export const deleteArticleService = (req: RequestUser) => {
     return getArticleBySlug(req)
         .then((article) => {
             if (req.user && article.author.username === req.user.username) {
                 article.remove(req.params.slug);
-            } else return;
-        })
+            }
+            // else return;
+        });
 };
 
-export const favoriteArticleService = (req: RequestUser) => {
+export const favoriteArticleService = (req: RequestUser, res: Response) => {
     getArticleBySlug(req)
         .then((article) => {
             getUserByName(req.user!.username.toString())
@@ -72,11 +76,11 @@ export const favoriteArticleService = (req: RequestUser) => {
                         article.save();
                     }
                 })
-        });
+        }).catch((err: Error) => errorHandler(err, res));
     return getArticleBySlug(req);
 };
 
-export const unFavoriteArticleService = (req: RequestUser) => {
+export const unFavoriteArticleService = (req: RequestUser, res: Response) => {
     getArticleBySlug(req)
         .then((article) => {
             getUserByName(req.user!.username.toString())
@@ -87,6 +91,6 @@ export const unFavoriteArticleService = (req: RequestUser) => {
                         article.save();
                     }
                 })
-        });
+        }).catch((err: Error) => errorHandler(err, res));
     return getArticleBySlug(req);
 };

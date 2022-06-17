@@ -1,4 +1,4 @@
-const serviceSlugify = require('../shared/services/slugify.service');
+const serviceSlugify = require('../modelsFieldsHandler/slugify');
 
 describe("Check method 'slugify' ", () => {
     test('should return correct value', () => {

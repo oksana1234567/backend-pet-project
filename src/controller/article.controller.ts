@@ -24,7 +24,7 @@ import {
 import { getTagsDB } from '../entities/tags';
 
 export const postArticle = (req: RequestUser, res: Response) => {
-    postArticleService(req)
+    return postArticleService(req)
         .then((article: Articles) => {
             res.status(201).send({
                 article: article.sendAsResult(article)
@@ -34,7 +34,7 @@ export const postArticle = (req: RequestUser, res: Response) => {
 };
 
 export const getArticle = (req: Request, res: Response) => {
-    getArticleBySlug(req)
+    return getArticleBySlug(req)
         .then(article => {
             res.status(200).send({
                 article: article.sendAsResult(article)
@@ -43,7 +43,7 @@ export const getArticle = (req: Request, res: Response) => {
 };
 
 export const updateArticle = (req: RequestUser, res: Response) => {
-    getArticleBySlug(req)
+    return getArticleBySlug(req)
         .then(article => {
             updateArticleService(req, res, article);
             res.status(200).send({
@@ -57,7 +57,7 @@ export const getArticles = (req: RequestUser, res: Response) => {
     let favorited = req.query.favorited;
     let requestAuthor = req.query.author;
 
-    getAllArticles(req)
+    return getAllArticles(req)
         .then(articles => {
 
             if (favorited) {
@@ -86,7 +86,7 @@ export const getArticles = (req: RequestUser, res: Response) => {
 };
 
 export const getArticlesFeed = (req: RequestUser, res: Response) => {
-    getArticlesForFeed(req)
+    return getArticlesForFeed(req)
         .then(articles => {
             articles = filterFeedArticles(articles, req);
             res.status(200).send({
@@ -97,14 +97,14 @@ export const getArticlesFeed = (req: RequestUser, res: Response) => {
 };
 
 export const deleteArticle = (req: RequestUser, res: Response) => {
-    deleteArticleService(req)
+    return deleteArticleService(req)
         .then(() => {
             res.status(200).send()
         }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const favoriteArticle = (req: RequestUser, res: Response) => {
-    favoriteArticleService(req)
+    return favoriteArticleService(req, res)
         .then((article) => {
         res.status(200).send({
             article: article.sendAsResult(article)
@@ -113,7 +113,7 @@ export const favoriteArticle = (req: RequestUser, res: Response) => {
 };
 
 export const unFavoriteArticle = (req: RequestUser, res: Response) => {
-    unFavoriteArticleService(req).then((article) => {
+    return unFavoriteArticleService(req, res).then((article) => {
         res.status(200).send({
             article: article.sendAsResult(article)
         })
@@ -121,7 +121,7 @@ export const unFavoriteArticle = (req: RequestUser, res: Response) => {
 };
 
 export const getTags = (req: Request, res: Response) => {
-    getTagsDB()
+    return getTagsDB()
         .then(tags => res.status(200).send({
             tags: tags,
         })).catch((err: Error) => errorHandler(err, res));

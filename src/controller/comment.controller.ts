@@ -7,7 +7,7 @@ import { deleteCommentService, postCommentService } from "../services/comment.se
 
 export const postComment = (req: RequestUser, res: Response) => {
    postCommentService(req);
-    getArticleBySlug(req)
+    return getArticleBySlug(req)
         .then(article => {
             res.status(200).send({
                 comments: makeCommentsArray(article)
@@ -17,13 +17,13 @@ export const postComment = (req: RequestUser, res: Response) => {
 };
 
 export const deleteComment = (req: RequestUser, res: Response) => {
-    deleteCommentService(req).then(() => {
+    return deleteCommentService(req).then(() => {
         res.status(200).send();
     }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const getComments = (req: Request, res: Response) => {
-    getArticleBySlug(req)
+    return getArticleBySlug(req)
         .then(article => {
             res.status(200).send({
                 comments: makeCommentsArray(article)

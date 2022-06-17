@@ -16,7 +16,7 @@ export const getProfile = (req: RequestUser, res: Response) => {
         });
     getUserByName(req.params.username)
         .then(user => {
-            res.status(200).send({
+            return res.status(200).send({
                 profile: { ...user.sendAsProfileResult(user), following: requestUser ? user.checkIfFollowing(requestUser, user) : false }
             })
         })
@@ -27,12 +27,12 @@ export const getProfile = (req: RequestUser, res: Response) => {
 
 export const followProfile = (req: RequestUser, res: Response) => {
     let profileUser: Users;
-    getUserByName(req.params.username)
+    return getUserByName(req.params.username)
         .then(user => {
             profileUser = user;
-            followProfileService(req, profileUser)
+            followProfileService(req, profileUser, res)
                 .then(user => {
-                res.status(200).send({
+                return res.status(200).send({
                     profile: { ...user.sendAsProfileResult(profileUser), following: true }
                 })
             })
@@ -42,12 +42,12 @@ export const followProfile = (req: RequestUser, res: Response) => {
 
 export const unFollowProfile = (req: RequestUser, res: Response) => {
     let profileUser: Users;
-    getUserByName(req.params.username)
+    return getUserByName(req.params.username)
         .then(user => {
             profileUser = user;
-            unFollowProfileService(req, profileUser)
+            unFollowProfileService(req, profileUser, res)
                 .then(user => {
-                    res.status(200).send({
+                    return res.status(200).send({
                         profile: { ...user.sendAsProfileResult(profileUser), following: true }
                     })
                 })
