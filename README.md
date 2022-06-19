@@ -13,7 +13,8 @@
 - [nodemon] (https://github.com/remy/nodemon) - For automatically restarting the node application when file changes in the directory are detected
 - [jest] (https://jestjs.io) - For testing JavaScript
 - [supertest] (https://github.com/visionmedia/supertest) - For HTTP assertions
-- [sinon] (https://github.com/sinonjs/sinon) - For Spies, Stubs and Mocks
+- [sinon] (https://github.com/sinonjs/sinon) - For Spies, Stubs and Mocks,
+- [mockingoose] (https://github.com/alonronin/mockingoose) - For mongoose mocking
 
 ## Application Structure
 

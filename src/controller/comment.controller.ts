@@ -6,7 +6,7 @@ import { getArticleBySlug } from "../entities/article";
 import { deleteCommentService, postCommentService } from "../services/comment.service";
 
 export const postComment = (req: RequestUser, res: Response) => {
-   postCommentService(req);
+   postCommentService(req, res);
     return getArticleBySlug(req)
         .then(article => {
             res.status(200).send({
@@ -17,7 +17,7 @@ export const postComment = (req: RequestUser, res: Response) => {
 };
 
 export const deleteComment = (req: RequestUser, res: Response) => {
-    return deleteCommentService(req).then(() => {
+    return deleteCommentService(req, res).then(() => {
         res.status(200).send();
     }).catch((err: Error) => errorHandler(err, res));
 };

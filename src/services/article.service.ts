@@ -55,14 +55,15 @@ export const updateArticleService = (req: RequestUser, res: Response, article: A
 };
 
 // check return value
-export const deleteArticleService = (req: RequestUser) => {
+export const deleteArticleService = (req: RequestUser, res: Response) => {
     return getArticleBySlug(req)
         .then((article) => {
             if (req.user && article.author.username === req.user.username) {
-                article.remove(req.params.slug);
+                return article.remove(req.params.slug);
             }
             // else return;
-        });
+            
+        }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const favoriteArticleService = (req: RequestUser, res: Response) => {

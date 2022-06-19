@@ -9,20 +9,16 @@ import { getUserByName } from '../entities/user';
 
 export const getProfile = (req: RequestUser, res: Response) => {
     let requestUser: Users;
-    getProfileService(req)
+    getProfileService(req, res)
         .then(user => { return requestUser = user })
-        .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err.message } });
-        });
+        .catch((err: Error) => errorHandler(err, res));
     getUserByName(req.params.username)
         .then(user => {
             return res.status(200).send({
                 profile: { ...user.sendAsProfileResult(user), following: requestUser ? user.checkIfFollowing(requestUser, user) : false }
             })
         })
-        .catch((err: Error) => {
-            return res.status(422).send({ errors: { body: err.message } });
-        });
+        .catch((err: Error) => errorHandler(err, res));
 };
 
 export const followProfile = (req: RequestUser, res: Response) => {

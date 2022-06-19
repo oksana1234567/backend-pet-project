@@ -68,7 +68,7 @@ export const getArticles = (req: RequestUser, res: Response) => {
                             articles: articles,
                             articlesCount: articles.length
                         })
-                    })
+                    }).catch((err: Error) => errorHandler(err, res));
             } else
             if (requestAuthor) {
                 articles = filterOwnArticles(articles, requestAuthor.toString());
@@ -97,7 +97,7 @@ export const getArticlesFeed = (req: RequestUser, res: Response) => {
 };
 
 export const deleteArticle = (req: RequestUser, res: Response) => {
-    return deleteArticleService(req)
+    return deleteArticleService(req, res)
         .then(() => {
             res.status(200).send()
         }).catch((err: Error) => errorHandler(err, res));

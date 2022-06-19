@@ -5,8 +5,8 @@ import { Users } from "../shared/interfaces/user.interface";
 import { getUserFromRequest } from "./user.service";
 import { Response } from 'express';
 
-export const getProfileService = (req: RequestUser) => {
-    return getUserByName(getUserFromRequest(req)._conditions.username);
+export const getProfileService = (req: RequestUser, res: Response) => {
+    return getUserByName(getUserFromRequest(req)._conditions.username).catch((err: Error) => errorHandler(err, res));
 };
 
 export const followProfileService = (req: RequestUser, profileUser: Users, res: Response) => {
