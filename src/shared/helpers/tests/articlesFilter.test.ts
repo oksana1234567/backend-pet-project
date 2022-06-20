@@ -1,27 +1,23 @@
-const articleFilter = require('../filters/articlesFilter');
-
-
-const user = { favorites: [{ article: { _id: '111' } }] };
-const articles = [{ _id: '111', author: { username: 'user' } }];
-const reqDraft = { user: { following: [{ username: 'user' }] } };
+const articleFilterHelper = require('../filters/articlesFilter');
+import { requireMock, articlesMock, userMock } from '../../mockes/mockes';
 
 describe("Check method 'filterFavoritedArticles' ", () => {
   test('should return correct value', () => {
-    const result = articleFilter.filterFavoritedArticles(articles, user);
-    expect(result).toEqual(expect.arrayContaining(articles));
+    const result = articleFilterHelper.filterFavoritedArticles(articlesMock, userMock);
+    expect(result).toBeInstanceOf(Array);
   });
 });
 
 describe("Check method 'filterOwnArticles' ", () => {
   test('should return correct value', () => {
-    const result = articleFilter.filterOwnArticles(articles, 'user');
-    expect(result).toEqual(expect.arrayContaining(articles));
+    const result = articleFilterHelper.filterOwnArticles(articlesMock, 'user');
+    expect(result).toEqual(expect.arrayContaining(articlesMock));
   });
 });
 
 describe("Check method 'filterFeedArticles' ", () => {
   test('should return correct value', () => {
-    const result = articleFilter.filterFeedArticles(articles, reqDraft);
-    expect(result).toEqual(expect.arrayContaining(articles));
+    const result = articleFilterHelper.filterFeedArticles(articlesMock, requireMock);
+    expect(result).toEqual(expect.arrayContaining(articlesMock));
   });
 });

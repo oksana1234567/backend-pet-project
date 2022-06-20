@@ -49,20 +49,16 @@ export const updateArticleService = (req: RequestUser, res: Response, article: A
             article.tagList = req.body.article.tagList;
             updateDate(article);
         }
-         article.save();
+        article.save();
     } return article;
-    // else { return res.status(401).send({ error: 'unauthorized' }) }
 };
 
-// check return value
 export const deleteArticleService = (req: RequestUser, res: Response) => {
     return getArticleBySlug(req)
         .then((article) => {
             if (req.user && article.author.username === req.user.username) {
                 return article.remove(req.params.slug);
             }
-            // else return;
-            
         }).catch((err: Error) => errorHandler(err, res));
 };
 

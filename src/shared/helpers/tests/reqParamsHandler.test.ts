@@ -1,18 +1,17 @@
 const reqParamsHandler = require('../reqParamsHandler/reqParamsHandler');
-
-const reqQueryDrafn = { query: {offset: '1', limit: '1', tag: 'tag'} };
-const queryDraft = {taglist: ['tag']}
+import { requireMock } from '../../mockes/mockes';
 
 describe("Check method 'makeCommentsArray' ", () => {
   test('should return correct value', () => {
-    const result = reqParamsHandler.tagHandler(queryDraft, reqQueryDrafn);
+    const queryDraft = { taglist: ['tag'] }
+    const result = reqParamsHandler.tagHandler(queryDraft, requireMock);
     expect(result).toBe(queryDraft);
   });
 });
 
 describe("Check method 'limitOffsetHandler' ", () => {
   test('should return correct value', () => {
-    const result = reqParamsHandler.limitOffsetHandler(1, 1, reqQueryDrafn);
+    const result = reqParamsHandler.limitOffsetHandler(1, 1, requireMock);
     expect(result).toMatchObject({ "limit": 1, "offset": 1 });
   });
 });

@@ -1,75 +1,59 @@
 import { jest } from '@jest/globals';
 import Article from "../../models/article.model";
-import User from "../../models/user.model";
-
+import { requireMock, responseMock, articlesMock, userMock } from '../../shared/mockes/mockes';
+import {mockArticleModelSave, mockUserModelSave, spyOnGetUserByName, spyOnGetArticleBySlug } from '../../shared/mockes/functionMockes'
 const mockingoose = require('mockingoose');
 const articleService = require('../article.service');
-const articleEntityMock = require('../../entities/article');
-const userEntityMock = require('../../entities/user');
-const favotiteHelperMock = require('../../shared/helpers/favoriteHandler/favorite')
-
-const reqArticleMock = {params: { slug: 'slug-111' }, user: { username: 'username' }, body: { article: { title: 'title', description: 'description', body: 'body', tagList: 'tagList' } } };
-const articleServiceDraft = { title: 'title', description: 'description', body: 'body', tagList: 'tagList', author: { username: 'username' }, save: () => { } };
-const userServiceDraft = { username: 'username', email: 'test2@com', bio: 'bio', image: 'image' };
-const reqMock = {
-  params: { slug: 'slug-111' },
-  user: { username: 'username' }
-};
-const mockResponse = {
-  send: () => { },
-  status: function (responseStatus: any) {
-    return this;
-  }
-};
+const favotiteHelperMock = require('../../shared/helpers/favoriteHandler/favorite');
     
-describe("Check method 'postArticleService' ", () => {
+describe("Check method 'postArticleService' of articleService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(articleServiceDraft, 'save');
-    const result = articleService.postArticleService(reqArticleMock);
+    mockArticleModelSave();
+    const result = articleService.postArticleService(requireMock);
     expect(result).toBeInstanceOf(Object);
   });
 });
 
-describe("Check method 'updateArticleService' ", () => {
+describe("Check method 'updateArticleService' of articleService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(articleServiceDraft, 'save');
-    const result = articleService.updateArticleService(reqArticleMock, mockResponse, articleServiceDraft);
-    expect(result).toMatchObject(articleServiceDraft);
+    mockArticleModelSave();
+    const result = articleService.updateArticleService(requireMock, responseMock, articlesMock[0]);
+    expect(result).toMatchObject(articlesMock[0]);
   });
 });
 
-describe("Check method 'deleteArticleService' ", () => {
+describe("Check method 'deleteArticleService' of articleService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(articleServiceDraft, 'remove');
-    const spyResult = jest.spyOn(articleEntityMock, 'getArticleBySlug').mockResolvedValue(articleServiceDraft)
-    const result = await articleService.deleteArticleService(reqMock, mockResponse);
-    const resultSpy = jest.spyOn(articleService, 'deleteArticleService');
+    mockingoose(Article).toReturn(articlesMock, 'remove');
+    const spyResult = spyOnGetArticleBySlug().mockResolvedValue(articlesMock)
+    await articleService.deleteArticleService(requireMock, responseMock);
+    jest.spyOn(articleService, 'deleteArticleService');
     expect(spyResult).toBeCalledTimes(1);
   });
 });
 
-describe("Check method 'favoriteArticleService' ", () => {
+describe("Check method 'favoriteArticleService' of articleService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(articleServiceDraft, 'save');
-    mockingoose(User).toReturn(userServiceDraft, 'save');
-    const spyResult = jest.spyOn(articleEntityMock, 'getArticleBySlug').mockResolvedValue(articleServiceDraft);
-    jest.spyOn(userEntityMock, 'getUserByName').mockResolvedValue(userServiceDraft);
+    mockArticleModelSave();
+    mockUserModelSave();
+    const spyResult = spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    spyOnGetUserByName().mockResolvedValue(userMock);
     jest.spyOn(favotiteHelperMock, 'checkFavorite').mockReturnValue(true);
     jest.spyOn(favotiteHelperMock, 'manageModelsChangesFavorite');
-    const result = jest.spyOn(articleService, 'favoriteArticleService');
+    jest.spyOn(articleService, 'favoriteArticleService');
     expect(spyResult).toHaveReturned();
   });
 });
 
-describe("Check method 'unFavoriteArticleService' ", () => {
+describe("Check method 'unFavoriteArticleService' of articleService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(articleServiceDraft, 'save');
-    mockingoose(User).toReturn(userServiceDraft, 'save');
-    const spyResult = jest.spyOn(articleEntityMock, 'getArticleBySlug').mockResolvedValue(articleServiceDraft);
-    jest.spyOn(userEntityMock, 'getUserByName').mockResolvedValue(userServiceDraft);
+    mockArticleModelSave();
+    mockUserModelSave();
+    const spyResult = spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    spyOnGetUserByName().mockResolvedValue(userMock);
     jest.spyOn(favotiteHelperMock, 'checkFavorite').mockReturnValue(true);
     jest.spyOn(favotiteHelperMock, 'manageModelsChangesUnFavorite');
-    const result = jest.spyOn(articleService, 'unFavoriteArticleService');
+    jest.spyOn(articleService, 'unFavoriteArticleService');
     expect(spyResult).toHaveReturned();
   });
 });

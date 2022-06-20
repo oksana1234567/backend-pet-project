@@ -1,10 +1,9 @@
-const serviceDate = require('../modelsFieldsHandler/updateDate');
-
-const draft = {updatedAt: 'date'}
+const dateHelper = require('../modelsFieldsHandler/updateDate');
 
 describe("Check method 'updateDate' ", () => {
   test('should return correct value', () => {
-    const result = serviceDate.updateDate(draft);
+    const draft = { updatedAt: 'date' };
+    const result = dateHelper.updateDate(draft);
     expect(result).toMatch('GMT+0300 (Eastern European Summer Time)');
   });
 });

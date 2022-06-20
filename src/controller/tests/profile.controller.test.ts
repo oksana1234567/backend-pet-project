@@ -1,76 +1,55 @@
-
 const profileController = require('../profile.controller');
-const profileServiceForMock = require('../../services/profile.service');
-const userServiceForMock = require('../../entities/user');
+const profileService = require('../../services/profile.service');
+import { requireMock, responseMock, userMock } from '../../shared/mockes/mockes';
+import { spyOnGetUserByName } from '../../shared/mockes/functionMockes';
 
-const reqProfileControllerMock = { params: { username: 'username' }, user: { username: 'username', following: [{ username: 'username' }] }, body: { comment: { body: 'body' } }, _conditions: { username: 'username' }, headers: { authorization: 'Bearer 111111' }, sendAsProfileResult: ()=>{} };
-const mockProfileResponse = {
-  send: () => { },
-  status: function (responseStatus: any) {
-    return this;
-  }
-};
-
-const userMock = {
-  username: 'test',
-  email: 'test@com',
-  password: 'password',
-  bio: 'bio',
-  image: 'image',
-  favorites: [],
-  following: [],
-  sendAsProfileResult: ()=>{}
-};
-
-
-describe("Check method 'followProfile' ", () => {
+describe("Check method 'followProfile' of ProfileController", () => {
   test('should return correct value', async () => {
-    jest.spyOn(profileServiceForMock, 'followProfileService').mockResolvedValue(userMock)
-    const spyResult = jest.spyOn(userServiceForMock, 'getUserByName').mockResolvedValue(userMock);
-    const result = profileController.followProfile(reqProfileControllerMock, mockProfileResponse);
-       expect(result.constructor.name).toBe('Promise');
+    jest.spyOn(profileService, 'followProfileService').mockResolvedValue(userMock)
+    spyOnGetUserByName().mockResolvedValue(userMock);
+    const result = profileController.followProfile(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
-    jest.spyOn(profileServiceForMock, 'followProfileService').mockResolvedValue(userMock)
-    const spyResult = jest.spyOn(userServiceForMock, 'getUserByName').mockRejectedValue(new Error);
-    const result = profileController.followProfile(reqProfileControllerMock, mockProfileResponse);
-       expect(result.constructor.name).toBe('Promise');
+    jest.spyOn(profileService, 'followProfileService').mockResolvedValue(userMock)
+    spyOnGetUserByName().mockRejectedValue(new Error);
+    const result = profileController.followProfile(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 });
 
-describe("Check method 'unFollowProfile' ", () => {
+describe("Check method 'unFollowProfile' of ProfileController", () => {
   test('should return correct value', async () => {
-    jest.spyOn(profileServiceForMock, 'unFollowProfileService').mockResolvedValue(userMock);
-    const spyResult = jest.spyOn(userServiceForMock, 'getUserByName').mockResolvedValue(userMock);
-    const result = profileController.unFollowProfile(reqProfileControllerMock, mockProfileResponse);
-       expect(result.constructor.name).toBe('Promise');
+    jest.spyOn(profileService, 'unFollowProfileService').mockResolvedValue(userMock);
+    spyOnGetUserByName().mockResolvedValue(userMock);
+    const result = profileController.unFollowProfile(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 
-    test('should return Error', async () => {
-    jest.spyOn(profileServiceForMock, 'unFollowProfileService').mockResolvedValue(userMock);
-    const spyResult = jest.spyOn(userServiceForMock, 'getUserByName').mockRejectedValue(new Error);
-    const result = profileController.unFollowProfile(reqProfileControllerMock, mockProfileResponse);
-      expect(result.constructor.name).toBe('Promise');
-    });
-  
+  test('should return Error', async () => {
+    jest.spyOn(profileService, 'unFollowProfileService').mockResolvedValue(userMock);
+    spyOnGetUserByName().mockRejectedValue(new Error);
+    const result = profileController.unFollowProfile(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
+  });
 });
 
-describe("Check method 'getProfile' ", () => {
+describe("Check method 'getProfile' of ProfileController", () => {
   test('should return correct value', async () => {
-    jest.spyOn(profileServiceForMock, 'getProfileService').mockResolvedValue(userMock);
-    jest.spyOn(userServiceForMock, 'getUserByName').mockResolvedValue(userMock);
+    jest.spyOn(profileService, 'getProfileService').mockResolvedValue(userMock);
+    spyOnGetUserByName().mockResolvedValue(userMock);
     const result = jest.spyOn(profileController, 'getProfile');
-    profileController.getProfile(reqProfileControllerMock, mockProfileResponse);
+    profileController.getProfile(requireMock, responseMock);
     expect(result).toHaveBeenCalledTimes(1);
   });
 
-    test('should catch Error', async () => {
-    jest.spyOn(profileServiceForMock, 'getProfileService').mockRejectedValue(new Error);
-    jest.spyOn(userServiceForMock, 'getUserByName').mockResolvedValue(userMock);
+  test('should catch Error', async () => {
+    jest.spyOn(profileService, 'getProfileService').mockRejectedValue(new Error);
+    spyOnGetUserByName().mockResolvedValue(userMock);
     jest.spyOn(profileController, 'getProfile');
-    const result = profileController.getProfile(reqProfileControllerMock, mockProfileResponse);
-      expect(result).toBeFalsy();
+    const result = profileController.getProfile(requireMock, responseMock);
+    expect(result).toBeFalsy();
   });
 });
 

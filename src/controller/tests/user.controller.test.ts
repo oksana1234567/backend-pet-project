@@ -1,48 +1,28 @@
-import mongoose from "mongoose";
-
 const userController = require('../user.controller');
-const userServiceForMock = require('../../entities/user');
-const userServiceMock = require('../../services/user.service')
+const userService = require('../../services/user.service')
+import { requireMock, responseMock, userMock } from '../../shared/mockes/mockes';
+import { spyOnGetUserByName } from '../../shared/mockes/functionMockes';
 
-const reqUserControllerMock = {params: { slug: 'slug-111' }, user: { username: 'username' }, body: { user: { username: 'username', email: 'email', password: '1', bio: 'bio'  } } };
-const mockResponse = {
-  send: () => { },
-  status: function (responseStatus: any) {
-    return this;
-  }
-};
-
-const userMock = {
-  username: 'test',
-  email: 'test@com',
-  password: 'password',
-  bio: 'bio',
-  image: 'image',
-  favorites: [],
-  following: [],
-  sendAsProfileResult: ()=>{}
-};
-
-describe("Check method 'getUser' ", () => {
+describe("Check method 'getUser' of UserController", () => {
   test('should return correct value', async () => {
-        const spyResult = jest.spyOn(userServiceForMock, 'getUserByName').mockResolvedValue(userMock);
-    const result = userController.getUser(reqUserControllerMock, mockResponse);
-       expect(result.constructor.name).toBe('Promise');
+    spyOnGetUserByName().mockResolvedValue(userMock);
+    const result = userController.getUser(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 });
 
 describe("Check method 'signUp' ", () => {
   test('should catch Error', async () => {
-    const spyResult = jest.spyOn(userServiceMock, 'createUserService').mockRejectedValue(new Error);
-    const result = userController.signUp(reqUserControllerMock, mockResponse);
-       expect(result.constructor.name).toBe('Promise');
+    const spyResult = jest.spyOn(userService, 'createUserService').mockRejectedValue(new Error);
+    const result = userController.signUp(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 });
 
-describe("Check method 'updateUser' ", () => {
+describe("Check method 'updateUser' of UserController", () => {
   test('should return correct value', async () => {
-    const spyResult = jest.spyOn(userServiceForMock, 'getUserByName').mockResolvedValue(userMock);
-    const result = userController.updateUser(reqUserControllerMock, mockResponse);
-       expect(result.constructor.name).toBe('Promise');
+    spyOnGetUserByName().mockResolvedValue(userMock);
+    const result = userController.updateUser(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 });

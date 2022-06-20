@@ -1,46 +1,32 @@
-// import mongoose from "mongoose";
-import Article from "../../models/article.model";
-import User from "../../models/user.model";
-
-const mockingoose = require('mockingoose');
+import { requireMock, responseMock, articlesMock } from '../../shared/mockes/mockes';
+import {mockArticleModelSave, spyOnGetArticleBySlug } from '../../shared/mockes/functionMockes'
 const commentService = require('../comment.service');
-const articleEntityMock = require('../../entities/article');
 const checkIfFollowedAuthorMock = require('../../shared/helpers/filters/checkIfFollowedAuthor');
-const filterMock = require('../../shared/helpers/filters/commentsFilter');
+const filterHelper = require('../../shared/helpers/filters/commentsFilter');
 
-const reqCommentMock = {params: { slug: 'slug-111' }, user: { username: 'username', following: [{username: 'username'}] }, body: { comment: { body: 'body' } } };
-const commentServiceDraft = { title: 'title', description: 'description', body: 'body', tagList: 'tagList', author: { username: 'username' }, save: () => { }, comments: [{comment: {body: 'body', id: 'id'}}] };
-const mockResponse = {
-  send: () => { },
-  status: function (responseStatus: any) {
-    return this;
-  }
-};
-    
-describe("Check method 'postCommentService' ", () => {
+describe("Check method 'postCommentService' of commentService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(commentServiceDraft, 'save');
-    // const spyResult = jest.spyOn(articleEntityMock, 'getArticleBySlug').mockResolvedValue(commentServiceDraft);
-    jest.spyOn(checkIfFollowedAuthorMock, 'checkIfFollowedAuthor').mockResolvedValue(commentServiceDraft).mockReturnValue(true);
+    mockArticleModelSave();
+    jest.spyOn(checkIfFollowedAuthorMock, 'checkIfFollowedAuthor').mockResolvedValue(articlesMock).mockReturnValue(true);
     const result = jest.spyOn(commentService, 'postCommentService');
-    await commentService.postCommentService(reqCommentMock, mockResponse);
+    await commentService.postCommentService(requireMock, responseMock);
     expect(result).toHaveBeenCalled()
   });
 });
 
-describe("Check method 'deleteCommentService' ", () => {
+describe("Check method 'deleteCommentService' of commentService", () => {
   test('should return correct value', async () => {
-    mockingoose(Article).toReturn(commentServiceDraft, 'save');
-    jest.spyOn(articleEntityMock, 'getArticleBySlug').mockResolvedValue(commentServiceDraft);
-    jest.spyOn(filterMock, 'filterAuthorComments').mockReturnValue(true)
-    jest.spyOn(filterMock, 'filterCommentsToDelete').mockReturnValue([{ comments: { body: 'body' } }])
-    const result = await commentService.deleteCommentService(reqCommentMock, mockResponse);
+    mockArticleModelSave();
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    jest.spyOn(filterHelper, 'filterAuthorComments').mockReturnValue(true)
+    jest.spyOn(filterHelper, 'filterCommentsToDelete').mockReturnValue([{ comments: { body: 'body' } }])
+    const result = await commentService.deleteCommentService(requireMock, responseMock);
     expect(result).toBeInstanceOf(Object)
   });
 
   test('should catch Error', async () => {
-    jest.spyOn(articleEntityMock, 'getArticleBySlug').mockRejectedValueOnce(new Error);
-    const result = await commentService.deleteCommentService(reqCommentMock, mockResponse);
+    spyOnGetArticleBySlug().mockRejectedValueOnce(new Error);
+    const result = await commentService.deleteCommentService(requireMock, responseMock);
     expect(result).toBeInstanceOf(Object);
   });
 });

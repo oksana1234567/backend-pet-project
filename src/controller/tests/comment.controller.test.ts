@@ -1,55 +1,46 @@
-
 const commentController = require('../comment.controller');
 const commentService = require('../../services/comment.service');
-const articleEntityMockForComment = require('../../entities/article');
+import { requireMock, responseMock, articlesMock } from '../../shared/mockes/mockes';
+import { spyOnGetArticleBySlug } from '../../shared/mockes/functionMockes';
 
-const reqCommentControllerMock = {query: {favorited: [], author: {username: 'username'}}, params: { slug: 'slug-111', id: 'id' }, user: { username: 'username' }, body: { comment: { body: 'comment' } } };
-const mockCommentResponse = {
-  send: () => { },
-  status: function (responseStatus: any) {
-    return this;
-  }
-};
-const articleServiceDraftForComment = { title: 'title', description: 'description', body: 'body', tagList: 'tagList', author: { username: 'username' }, save: () => { }, _id: 'id', comments: [{comment: {body: 'body'}}] };
-
-describe("Check method 'postArticle' ", () => {
-  test('should return correct value', async () => {
-    jest.spyOn(articleEntityMockForComment, 'getArticleBySlug').mockResolvedValue(articleServiceDraftForComment);
-    const result = commentController.postComment(reqCommentControllerMock, mockCommentResponse);
+describe("Check method 'postArticle' of commentController", () => {
+  test('should return Promise', async () => {
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock[0]);
+    const result = commentController.postComment(requireMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
-    jest.spyOn(articleEntityMockForComment, 'getArticleBySlug').mockRejectedValue(new Error)
-    const result = commentController.postComment(reqCommentControllerMock, mockCommentResponse);
+    spyOnGetArticleBySlug().mockRejectedValue(new Error)
+    const result = commentController.postComment(requireMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
 
-describe("Check method 'deleteComment' ", () => {
-  test('should return correct value', async () => {
-    jest.spyOn(commentService, 'deleteCommentService').mockResolvedValue(articleServiceDraftForComment);
-    const result = commentController.deleteComment(reqCommentControllerMock, mockCommentResponse);
+describe("Check method 'deleteComment'  of commentController", () => {
+  test('should return Promise', async () => {
+    jest.spyOn(commentService, 'deleteCommentService').mockResolvedValue(articlesMock[0]);
+    const result = commentController.deleteComment(requireMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
     jest.spyOn(commentService, 'deleteCommentService').mockRejectedValue(new Error)
-    const result = commentController.deleteComment(reqCommentControllerMock, mockCommentResponse);
+    const result = commentController.deleteComment(requireMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
 
-describe("Check method 'getComments' ", () => {
-  test('should return correct value', async () => {
-    jest.spyOn(articleEntityMockForComment, 'getArticleBySlug').mockResolvedValue(articleServiceDraftForComment);
-    const result = commentController.getComments(reqCommentControllerMock, mockCommentResponse);
+describe("Check method 'getComments'  of commentController", () => {
+  test('should return Promise', async () => {
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock[0]);
+    const result = commentController.getComments(requireMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
-    jest.spyOn(articleEntityMockForComment, 'getArticleBySlug').mockRejectedValue(new Error)
-    const result = commentController.getComments(reqCommentControllerMock, mockCommentResponse);
+    spyOnGetArticleBySlug().mockRejectedValue(new Error)
+    const result = commentController.getComments(requireMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });

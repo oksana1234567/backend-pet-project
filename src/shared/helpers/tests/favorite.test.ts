@@ -1,23 +1,21 @@
-const helperFavorite = require('../favoriteHandler/favorite');
-
-const draftArticle = { slug: 'slug', favorited: false, favoritesCount: 0 };
-const draftUser = { favorites: [{ article: { slug: 'slug' } }] };
+const favoriteHelper = require('../favoriteHandler/favorite');
+import { articlesMock, userMock } from '../../mockes/mockes';
 
 describe("Check methods of 'favorite.service' ", () => {
     test('checkFavorite should return correct value', () => {
-        const result = helperFavorite.checkFavorite(draftUser, draftArticle);
+        const result = favoriteHelper.checkFavorite(userMock, articlesMock[0]);
         expect(result).toBe(true);
     });
 
     test('manageModelsChangesFavorite should return correct value', () => {
-        const result = helperFavorite.manageModelsChangesFavorite(draftUser, draftArticle);
-        expect(draftArticle.favorited).toBe(true);
-        expect(draftArticle.favoritesCount).toBe(1);
+        favoriteHelper.manageModelsChangesFavorite(userMock, articlesMock[0]);
+        expect(articlesMock[0].favorited).toBe(true);
+        expect(articlesMock[0].favoritesCount).toBe(1);
     });
     
     test('manageModelsChangesUnFavorite should return correct value', () => {
-        const result = helperFavorite.manageModelsChangesUnFavorite(draftUser, draftArticle);
-        expect(draftArticle.favorited).toBe(false);
-        expect(draftArticle.favoritesCount).toBeNull;
+        favoriteHelper.manageModelsChangesUnFavorite(userMock, articlesMock[0]);
+        expect(articlesMock[0].favorited).toBe(false);
+        expect(articlesMock[0].favoritesCount).toBeNull;
     });
 });
