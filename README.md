@@ -33,4 +33,4 @@ Requests are authenticated using the `Authorization` header with a valid JWT.
 
 ## API Documentation
 
-[API] (https://api.realworld.io/api-docs/#/) - Detailed description for API endpoints
+[API](https://api.realworld.io/api-docs/#/) - Detailed description for API endpoints

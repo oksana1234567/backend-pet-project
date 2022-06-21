@@ -17,10 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-    // res.header(
-    //     "Access-Control-Allow-Headers",
-    //     "Authorization, Origin, Content-Type, Accept, X-Requested-With"
-    // );
     next();
 });
 
