@@ -9,7 +9,7 @@ let CommentSchema = new mongoose.Schema({
             username: String,
             bio: String,
             image: String,
-            following: Array
+            following: Boolean
       }
 });
 

@@ -21,7 +21,7 @@ let ArticleSchema = new mongoose.Schema({
                 username: String,
                 bio: String,
                 image: String,
-                following: Array
+                following: Boolean
             }
         }
         }],
@@ -29,7 +29,7 @@ let ArticleSchema = new mongoose.Schema({
         username: String,
         bio: String,
         image: String,
-        following: Array
+        following: Boolean
     }
 });
 
@@ -42,11 +42,10 @@ ArticleSchema.methods.sendAsResult = function (article : Articles) {
         tagList: article.tagList ? [...article.tagList] : null,
         createdAt: article.createdAt,
         updatedAt: article.updatedAt,
-        favorited: article.favorited,
         favoritesCount: article.favoritesCount,
         author: article.author,
         }
-  };
+};
 
 const Article = mongoose.model('Article', ArticleSchema);
 

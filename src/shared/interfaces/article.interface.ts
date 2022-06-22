@@ -1,5 +1,4 @@
 import Comments from "./comment.interface";
-import { Users } from "./user.interface";
 
 interface Articles {
         slug: StringConstructor,
@@ -12,9 +11,14 @@ interface Articles {
         favorited: Boolean,
         favoritesCount: number,
         comments: Array<Comments>,
-        author: Users,
+        author: {
+            username: String,
+            bio: String,
+            image: String,
+            following: Boolean
+        },
         _id: String,
-        sendAsResult(article: Articles): Articles,
+        sendAsResult(article: Articles ): Articles,
         save(): Promise<Articles>
 };
 

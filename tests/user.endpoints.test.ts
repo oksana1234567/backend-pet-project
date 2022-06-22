@@ -39,6 +39,13 @@ describe("User endpoints testing: ", () => {
       .expect(200)
   });
   
+  test("check route '/api/users/login', method 'post' - should not login the user after invalid Password checking - Error", async () => {
+    await request(app)
+      .post('/api/users/login')
+      .send({ user: { email: "usernameTEST@com", password: "invalid password" } })
+      .expect(401);
+  });
+
   test("check route '/api/users/login', method 'post' - should not login the user - Error", async () => {
     await request(app)
       .post('/api/users/login')
@@ -67,7 +74,7 @@ describe("User endpoints testing: ", () => {
   });
 
   test("check route '/api/user', method 'put' - should update the user", async () => {
-    const req = getMockReq(getMockReq)
+    const req = getMockReq(getMockReq);
     const result = await request(app)
       .put('/api/user')
       .set('Authorization', token)

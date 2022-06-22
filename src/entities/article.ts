@@ -28,7 +28,6 @@ export const getArticlesForFeed = (req: RequestUser) => {
     let offset = 0;
 
     limitOffsetHandler(limit, offset, req);
-    
     return Article.find({ username: { $in: req.user!.following } })
         .limit(limit)
         .skip(offset)

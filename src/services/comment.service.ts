@@ -2,7 +2,7 @@
 import { getArticleBySlug } from '../entities/article';
 import Comment from '../models/comment.model';
 import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
-import { checkIfFollowedAuthor } from '../shared/helpers/filters/checkIfFollowedAuthor';
+import { findFollowedAuthor } from '../shared/helpers/filters/findFollowedAuthor';
 import { filterCommentsToDelete, filterAuthorComments } from '../shared/helpers/filters/commentsFilter';
 import RequestUser from '../shared/interfaces/requestUser.interface';
 import { Response } from "express";
@@ -20,7 +20,7 @@ export const postCommentService = (req: RequestUser, res: Response) => {
                     username: req.user!.username,
                     bio: req.user!.bio,
                     image: req.user!.image,
-                    following: checkIfFollowedAuthor(req.user!.following, article.author.username)
+                    following: findFollowedAuthor(req.user!.following).includes(article.author.username)
                 }
             });
             finallComment = {

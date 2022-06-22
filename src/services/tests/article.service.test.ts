@@ -36,12 +36,23 @@ describe("Check method 'favoriteArticleService' of articleService", () => {
   test('should return correct value', async () => {
     mockArticleModelSave();
     mockUserModelSave();
-    const spyResult = spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
     spyOnGetUserByName().mockResolvedValue(userMock);
     jest.spyOn(favotiteHelperMock, 'checkFavorite').mockReturnValue(true);
     jest.spyOn(favotiteHelperMock, 'manageModelsChangesFavorite');
-    jest.spyOn(articleService, 'favoriteArticleService');
-    expect(spyResult).toHaveReturned();
+    const result = articleService.favoriteArticleService(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
+  });
+
+    test('should catch Error', async () => {
+    mockArticleModelSave();
+    mockUserModelSave();
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    spyOnGetUserByName().mockRejectedValue(new Error);
+    jest.spyOn(favotiteHelperMock, 'checkFavorite').mockReturnValue(true);
+    jest.spyOn(favotiteHelperMock, 'manageModelsChangesFavorite');
+    const result = articleService.favoriteArticleService(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
   });
 });
 
@@ -49,12 +60,41 @@ describe("Check method 'unFavoriteArticleService' of articleService", () => {
   test('should return correct value', async () => {
     mockArticleModelSave();
     mockUserModelSave();
-    const spyResult = spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
     spyOnGetUserByName().mockResolvedValue(userMock);
     jest.spyOn(favotiteHelperMock, 'checkFavorite').mockReturnValue(true);
     jest.spyOn(favotiteHelperMock, 'manageModelsChangesUnFavorite');
-    jest.spyOn(articleService, 'unFavoriteArticleService');
-    expect(spyResult).toHaveReturned();
+    const result = articleService.unFavoriteArticleService(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
+  });
+
+  test('should catch Error', async () => {
+    mockArticleModelSave();
+    mockUserModelSave();
+    spyOnGetArticleBySlug().mockResolvedValue(articlesMock);
+    spyOnGetUserByName().mockRejectedValue(new Error);
+    jest.spyOn(favotiteHelperMock, 'checkFavorite').mockReturnValue(true);
+    jest.spyOn(favotiteHelperMock, 'manageModelsChangesUnFavorite');
+    const result = articleService.unFavoriteArticleService(requireMock, responseMock);
+    expect(result.constructor.name).toBe('Promise');
+  });
+});
+
+describe("Check method 'getFavoritedArticlesService' of articleService", () => {
+  test('should return correct value', async () => {
+    mockArticleModelSave();
+    mockUserModelSave();
+    spyOnGetUserByName().mockResolvedValue(userMock);
+    const result = articleService.getFavoritedArticlesService('username', articlesMock, responseMock)
+    expect(result.constructor.name).toBe('Promise');
+  });
+
+  test('should catch Error', async () => {
+    mockArticleModelSave();
+    mockUserModelSave();
+    spyOnGetUserByName().mockRejectedValue(new Error);
+    const result = articleService.getFavoritedArticlesService('username', articlesMock, responseMock)
+    expect(result.constructor.name).toBe('Promise');
   });
 });
 

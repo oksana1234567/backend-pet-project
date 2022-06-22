@@ -4,8 +4,11 @@ import { Users } from "../../interfaces/user.interface";
 
 export const filterFavoritedArticles = (articles: Array<Articles>, user: Users) => {
     const userFavorited = user.favorites.map((val: any) => val.article._id.toString()).toString();
-    articles = articles.filter(val => val._id.toString().includes(userFavorited));
-
+    if (userFavorited) {
+        articles = articles.filter(val => userFavorited.includes(val._id.toString()));
+    } else if (!userFavorited) {
+        articles = [];
+    }
     return articles;
 };
 

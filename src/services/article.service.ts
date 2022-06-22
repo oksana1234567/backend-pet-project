@@ -8,6 +8,7 @@ import { getArticleBySlug } from '../entities/article';
 import { checkFavorite, manageModelsChangesFavorite, manageModelsChangesUnFavorite } from '../shared/helpers/favoriteHandler/favorite';
 import { getUserByName } from '../entities/user';
 import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
+import { filterFavoritedArticles } from '../shared/helpers/filters/articlesFilter';
 
 
 export const postArticleService = (req: RequestUser) => {
@@ -25,7 +26,7 @@ export const postArticleService = (req: RequestUser) => {
             username: req.user!.username,
             bio: req.user!.bio,
             image: req.user!.image,
-            following: req.user!.following
+            following: false,
         }
     }
     ).save()
@@ -72,7 +73,7 @@ export const favoriteArticleService = (req: RequestUser, res: Response) => {
                         user.save();
                         article.save();
                     }
-                })
+                }).catch((err: Error) => errorHandler(err, res));
         }).catch((err: Error) => errorHandler(err, res));
     return getArticleBySlug(req);
 };
@@ -87,7 +88,15 @@ export const unFavoriteArticleService = (req: RequestUser, res: Response) => {
                         user.save();
                         article.save();
                     }
-                })
+                }).catch((err: Error) => errorHandler(err, res));
         }).catch((err: Error) => errorHandler(err, res));
     return getArticleBySlug(req);
+};
+
+export const getFavoritedArticlesService = (username: string, articles: Articles[], res: Response) => {
+    return getUserByName(username)
+        .then(user => {
+            articles = filterFavoritedArticles(articles, user);
+            return articles;
+        }).catch((err: Error) => errorHandler(err, res))
 };

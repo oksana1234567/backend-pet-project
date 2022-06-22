@@ -17,9 +17,10 @@ export const postComment = (req: RequestUser, res: Response) => {
 };
 
 export const deleteComment = (req: RequestUser, res: Response) => {
-    return deleteCommentService(req, res).then(() => {
-        res.status(200).send();
-    }).catch((err: Error) => errorHandler(err, res));
+    return deleteCommentService(req, res)
+        .then(() => {
+            res.status(200).send();
+        }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const getComments = (req: Request, res: Response) => {

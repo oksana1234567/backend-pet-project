@@ -20,13 +20,14 @@ export const signUp = (req: IRequestUser, res: Response) => {
 };
 
 export const signIn = (req: IRequestUser, res: Response) => {
-        return getUserByEmail(req.body.user.email)
+    return getUserByEmail(req.body.user.email)
         .then(user => {
             if (!checkIfValidPassword(req, user)) {
-                res.status(401).send({errors: { body: 'Cannot authorize' } });
+                res.status(401).send({ errors: { body: 'Cannot authorize' } });
+                return;
             };
             res.status(200).send({
-                user: {...user.sendAsUserResult(user), token: createToken(user.username)}
+                user: { ...user.sendAsUserResult(user), token: createToken(user.username) }
             })
         }).catch((err: Error) => errorHandler(err, res));
 };

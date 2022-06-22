@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import Profile from '../shared/interfaces/profile.interface';
 import { UserResponse, Users } from '../shared/interfaces/user.interface';
+import {findFollowedAuthor} from '../shared/helpers/filters/findFollowedAuthor'
 
 let UserSchema = new mongoose.Schema({
     username: { type: String, required: true, index: { unique: true, dropDups: true } },
@@ -12,15 +13,15 @@ let UserSchema = new mongoose.Schema({
     following: Array
 });
 
-UserSchema.methods.sendAsProfileResult = function (profileUser: Profile) {
+UserSchema.methods.sendAsProfileResult = function (profileUser: Profile, user: Users) {
     if (profileUser) {
         return {
             username: profileUser.username,
             bio: profileUser.bio,
             image: profileUser.image,
-            following: profileUser.following,
+            following: user ? findFollowedAuthor(user.following).includes(profileUser.username) : false
         }
-    } else return;
+    }
 };
   
 UserSchema.methods.sendAsUserResult = function(user: UserResponse) {

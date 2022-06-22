@@ -43,6 +43,7 @@ describe("User route testing: ", () => {
       .post('/api/articles/:slug/favorite')
     expect(result.constructor.name).toBe('Response');
   });
+
   test("check route '/api/articles', method 'post' - should get articles", async () => {
     const result = await request(app)
       .get('/api/articles')

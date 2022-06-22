@@ -43,7 +43,7 @@ export const requireMock = {
         authorization: 'Bearer 111111'
     },
     sendAsProfileResult: () => { },
-
+    rawHeaders: ['Authorization']
 };
 
 export const responseMock = {

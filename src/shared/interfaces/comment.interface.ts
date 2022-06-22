@@ -10,7 +10,7 @@ interface Comments {
             username: String,
             bio: String,
             image: String,
-            following: Array<Users>,
+            following: Boolean
         }
     }
 };

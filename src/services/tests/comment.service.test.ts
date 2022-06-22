@@ -1,13 +1,13 @@
 import { requireMock, responseMock, articlesMock } from '../../shared/mockes/mockes';
 import {mockArticleModelSave, spyOnGetArticleBySlug } from '../../shared/mockes/functionMockes'
 const commentService = require('../comment.service');
-const checkIfFollowedAuthorMock = require('../../shared/helpers/filters/checkIfFollowedAuthor');
+const findFollowedAuthorMock = require('../../shared/helpers/filters/findFollowedAuthor');
 const filterHelper = require('../../shared/helpers/filters/commentsFilter');
 
 describe("Check method 'postCommentService' of commentService", () => {
   test('should return correct value', async () => {
     mockArticleModelSave();
-    jest.spyOn(checkIfFollowedAuthorMock, 'checkIfFollowedAuthor').mockResolvedValue(articlesMock).mockReturnValue(true);
+    jest.spyOn(findFollowedAuthorMock, 'findFollowedAuthor').mockResolvedValue(articlesMock).mockReturnValue(['username']);
     const result = jest.spyOn(commentService, 'postCommentService');
     await commentService.postCommentService(requireMock, responseMock);
     expect(result).toHaveBeenCalled()
