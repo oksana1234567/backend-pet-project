@@ -32,6 +32,7 @@ export const postCommentService = (req: RequestUser, res: Response) => {
             };
             article.comments.push({ comment: finallComment });
             article.save();
+            return;
         }).catch((err: Error) => errorHandler(err, res));
 };
 
@@ -39,7 +40,8 @@ export const deleteCommentService = (req: RequestUser, res: Response) => {
     getArticleBySlug(req)
         .then((article) => {
             if (filterAuthorComments(article, req.user!.username).length) {
-                article.comments = filterCommentsToDelete(article.comments, req)
+                article.comments = filterCommentsToDelete(article.comments, req);
+                return article.comments;
             }
             article.save();
         }

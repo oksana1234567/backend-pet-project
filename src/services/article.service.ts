@@ -5,7 +5,7 @@ import RequestUser from '../shared/interfaces/requestUser.interface';
 import Articles from '../shared/interfaces/article.interface';
 import { updateDate } from '../shared/helpers/modelsFieldsHandler/updateDate';
 import { getArticleBySlug } from '../entities/article';
-import { checkFavorite, manageModelsChangesFavorite, manageModelsChangesUnFavorite } from '../shared/helpers/favoriteHandler/favorite';
+import { checkFavorite, doFavorite, doUnFavorite } from '../shared/helpers/favoriteHandler/favorite';
 import { getUserByName } from '../entities/user';
 import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
 import { filterFavoritedArticles } from '../shared/helpers/filters/articlesFilter';
@@ -64,18 +64,18 @@ export const deleteArticleService = (req: RequestUser, res: Response) => {
 };
 
 export const favoriteArticleService = (req: RequestUser, res: Response) => {
-    getArticleBySlug(req)
+    return getArticleBySlug(req)
         .then((article) => {
             getUserByName(req.user!.username.toString())
                 .then((user) => {
                     if (!checkFavorite(user, article)) {
-                        manageModelsChangesFavorite(user, article);
+                        doFavorite(user, article);
                         user.save();
                         article.save();
                     }
-                }).catch((err: Error) => errorHandler(err, res));
-        }).catch((err: Error) => errorHandler(err, res));
-    return getArticleBySlug(req);
+                }).catch((err: Error) => { return errorHandler(err, res) });
+        }).catch((err: Error) => { return errorHandler(err, res) });
+    // return getArticleBySlug(req);
 };
 
 export const unFavoriteArticleService = (req: RequestUser, res: Response) => {
@@ -84,7 +84,7 @@ export const unFavoriteArticleService = (req: RequestUser, res: Response) => {
             getUserByName(req.user!.username.toString())
                 .then((user) => {
                     if (checkFavorite(user, article)) {
-                        manageModelsChangesUnFavorite(user, article, req.params.slug);
+                        doUnFavorite(user, article, req.params.slug);
                         user.save();
                         article.save();
                     }

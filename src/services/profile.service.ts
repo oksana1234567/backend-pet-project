@@ -14,7 +14,7 @@ export const followProfileService = (req: RequestUser, profileUser: Users, res: 
         .then(user => {
             user.following.push(profileUser);
             return user.save()
-        }).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };
 
 export const unFollowProfileService = (req: RequestUser, profileUser: Users, res: Response) => {
@@ -22,5 +22,5 @@ export const unFollowProfileService = (req: RequestUser, profileUser: Users, res
         .then(user => {
             user.following.splice(user.following.indexOf(profileUser), 1);
             return user.save()
-        }).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };

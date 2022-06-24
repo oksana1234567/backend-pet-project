@@ -7,14 +7,14 @@ describe("Check methods of 'favorite.service' ", () => {
         expect(result).toBe(true);
     });
 
-    test('manageModelsChangesFavorite should return correct value', () => {
-        favoriteHelper.manageModelsChangesFavorite(userMock, articlesMock[0]);
+    test('doFavorite should return correct value', () => {
+        favoriteHelper.doFavorite(userMock, articlesMock[0]);
         expect(articlesMock[0].favorited).toBe(true);
         expect(articlesMock[0].favoritesCount).toBe(1);
     });
     
-    test('manageModelsChangesUnFavorite should return correct value', () => {
-        favoriteHelper.manageModelsChangesUnFavorite(userMock, articlesMock[0]);
+    test('doUnFavorite should return correct value', () => {
+        favoriteHelper.doUnFavorite(userMock, articlesMock[0]);
         expect(articlesMock[0].favorited).toBe(false);
         expect(articlesMock[0].favoritesCount).toBeNull;
     });

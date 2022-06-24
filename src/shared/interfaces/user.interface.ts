@@ -8,7 +8,8 @@ export interface Users {
     image: String,
     favorites: Array<{ article: Articles }>,
     following: Array<Users>,
-    sendAsUserResult(user: Users): Users
+    sendAsUserResult(user: Users): Users,
+    sendAsProfileResult(userProfile: Users, userRequest: Users): Users
 };
 
 export interface UserResponse {

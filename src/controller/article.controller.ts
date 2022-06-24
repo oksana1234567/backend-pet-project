@@ -38,30 +38,32 @@ export const postArticle = (req: RequestUser, res: Response) => {
 export const getArticle = (req: RequestUser, res: Response) => {
     return getArticleBySlug(req)
         .then((article: Articles) => {
+
             if (req.rawHeaders[0] === 'Authorization') {
-                getProfileService(req, res)
+                return getProfileService(req, res)
                     .then(user => {
-                        res.status(200).send({
+                        return res.status(200).send({
                             article: {
                                 ...article.sendAsResult(article),
                                 favorited: checkFavorite(user, article),
                                 author: { ...article.author, following: user ? findFollowedAuthor(user.following).includes(article.author.username) : false }
                             }
                         })
-                    }).catch((err: Error) => errorHandler(err, res));
+                    }).catch((err: Error) => { return errorHandler(err, res) });
+                
             } else {
-                res.status(200).send({
+                return res.status(200).send({
                     article: { ...article.sendAsResult(article), author: { ...article.author, following: false } }
                 })
             }
-        }).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };
 
 export const updateArticle = (req: RequestUser, res: Response) => {
     return getArticleBySlug(req)
         .then((article: Articles) => {
             updateArticleService(req, res, article);
-            res.status(200).send({
+            return res.status(200).send({
                 article: article.sendAsResult(article)
             })
         }).catch((err: Error) => errorHandler(err, res));
@@ -69,7 +71,7 @@ export const updateArticle = (req: RequestUser, res: Response) => {
 
 export const getArticles = (req: RequestUser, res: Response) => {
     let favorites = req.query.favorited;
-    let requestAuthor = req.query.author;
+    let ownArticlesRequestedBy = req.query.author;
 
     return getAllArticles(req)
         .then((articles: Articles[]) => {
@@ -77,21 +79,22 @@ export const getArticles = (req: RequestUser, res: Response) => {
             if (favorites) {
                 getFavoritedArticlesService(favorites.toString(), articles, res)
                     .then(articlesFavorited => {
-                        res.status(200).send({
+                        return res.status(200).send({
                             articles: articlesFavorited,
                             articlesCount: articles.length
                         })
                     })
 
-            } else if (requestAuthor) {
-                articles = filterOwnArticles(articles, requestAuthor.toString());
-                res.status(200).send({
+            } else if (ownArticlesRequestedBy) {
+                articles = filterOwnArticles(articles, ownArticlesRequestedBy.toString());
+                return res.status(200).send({
                     articles: articles,
                     articlesCount: articles.length
                 })
             }
+                
             else {
-                res.status(200).send({
+                return res.status(200).send({
                     articles: articles,
                     articlesCount: articles.length
                 })
@@ -100,16 +103,18 @@ export const getArticles = (req: RequestUser, res: Response) => {
 };
 
 export const getArticlesFeed = (req: RequestUser, res: Response) => {
+
     if (!req.user!.following.length) {
         return res.status(200).send({
             articles: [],
             articlesCount: 0
-        });
+        })
+
     } else if (req.user!.following.length) {
         return getArticlesForFeed(req)
             .then(articles => {
                 articles = filterFeedArticles(articles, req);
-                res.status(200).send({
+                return res.status(200).send({
                     articles: articles,
                     articlesCount: articles.length
                 })
@@ -120,23 +125,25 @@ export const getArticlesFeed = (req: RequestUser, res: Response) => {
 export const deleteArticle = (req: RequestUser, res: Response) => {
     return deleteArticleService(req, res)
         .then(() => {
-            res.status(200).send()
+            return res.status(200).send()
         }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const favoriteArticle = (req: RequestUser, res: Response) => {
     return favoriteArticleService(req, res)
-        .then((article) => {
-        res.status(200).send({
-            article: article.sendAsResult(article)
-        })
-    }).catch((err: Error) => errorHandler(err, res));
+        .then(() => {
+            getArticleBySlug(req).then((article) => {
+                return res.status(200).send({
+                    article: article.sendAsResult(article)
+                })
+            })
+        }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const unFavoriteArticle = (req: RequestUser, res: Response) => {
     return unFavoriteArticleService(req, res)
-        .then((article) => {
-            res.status(200).send({
+        .then(article => {
+            return res.status(200).send({
                 article: article.sendAsResult(article)
             })
         }).catch((err: Error) => errorHandler(err, res));
@@ -144,7 +151,9 @@ export const unFavoriteArticle = (req: RequestUser, res: Response) => {
 
 export const getTags = (req: Request, res: Response) => {
     return getTagsDB()
-        .then(tags => res.status(200).send({
-            tags: tags,
-        })).catch((err: Error) => errorHandler(err, res));
+        .then((tags: Array<String>) => {
+            return res.status(200).send({
+                tags: tags,
+            })
+        }).catch((err: Error) => errorHandler(err, res));
 };

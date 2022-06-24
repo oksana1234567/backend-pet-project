@@ -17,6 +17,7 @@ export const filterOwnArticles = (articles: Array<Articles>, reqAuthor: string) 
 };
 
 export const filterFeedArticles = (articles: Array<Articles>, req: RequestUser) => {
-    return articles = articles.filter(val => val.author.username.includes(req.user!.following.map(val => val.username).toString()));
+    const followed = req.user!.following.map(val => val.username).toString();
+    return articles.filter(val => { val.author.following = true; return val.author.username.includes(followed) });
 };
 

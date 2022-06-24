@@ -10,7 +10,7 @@ export const makeCommentsArray = (article: Articles) => {
 };
 
 export const filterCommentsToDelete = (comments: Array<Comments>, req: Request) => {
-    return comments = comments.filter((value: Comments) => value.comment.id.toString() !== req.params.id);
+    return comments = comments.filter((value: Comments) => value.comment._id.toString() !== req.params.id);
 };
 
 export const filterAuthorComments = ( article: Articles, authorName: String) => {

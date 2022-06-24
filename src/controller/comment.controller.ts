@@ -4,29 +4,31 @@ import { makeCommentsArray } from "../shared/helpers/filters/commentsFilter";
 import { errorHandler } from "../shared/helpers/errorHandler/errorHandler";
 import { getArticleBySlug } from "../entities/article";
 import { deleteCommentService, postCommentService } from "../services/comment.service";
+import Articles from "../shared/interfaces/article.interface";
 
 export const postComment = (req: RequestUser, res: Response) => {
-   postCommentService(req, res);
-    return getArticleBySlug(req)
-        .then(article => {
-            res.status(200).send({
-                comments: makeCommentsArray(article)
-            })
-        })
-        .catch((err: Error) => errorHandler(err, res));
+    return postCommentService(req, res)
+        .then(() => {
+            getArticleBySlug(req)
+                .then((article: Articles) => {
+                    return res.status(200).send({
+                        comments: makeCommentsArray(article)
+                    })
+                }).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const deleteComment = (req: RequestUser, res: Response) => {
     return deleteCommentService(req, res)
         .then(() => {
-            res.status(200).send();
+            return res.status(200).send();
         }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const getComments = (req: Request, res: Response) => {
     return getArticleBySlug(req)
-        .then(article => {
-            res.status(200).send({
+        .then((article: Articles) => {
+            return res.status(200).send({
                 comments: makeCommentsArray(article)
             })
         })

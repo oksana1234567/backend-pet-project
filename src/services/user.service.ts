@@ -7,6 +7,7 @@ import RequestUser from '../shared/interfaces/requestUser.interface';
 import { getToken } from '../shared/helpers/authHandler/getToken';
 import { getUserByName } from '../entities/user';
 import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
+import { Users } from '../shared/interfaces/user.interface';
 
 
 export const getUserFromRequest = (req: RequestUser) => {

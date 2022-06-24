@@ -1,19 +1,21 @@
 
 import { Response } from "express";
 import RequestUser from '../shared/interfaces/requestUser.interface';
-import { Users } from '../shared/interfaces/user.interface';
 import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
-import { followProfileService, getProfileService, unFollowProfileService } from '../services/profile.service';
+import {
+    followProfileService,
+    getProfileService,
+    unFollowProfileService
+} from '../services/profile.service';
 import { getUserByName } from '../entities/user';
+import { Users } from "../shared/interfaces/user.interface";
 
 
 export const getProfile = (req: RequestUser, res: Response) => {
-    let requestUser: Users;
     getProfileService(req, res)
-        .then(user => {
-            requestUser = user;
+        .then((requestUser: Users) => {
             getUserByName(req.params.username)
-                .then(userProfile => {
+                .then((userProfile: Users) => {
                     return res.status(200).send({
                         profile: { ...userProfile.sendAsProfileResult(userProfile, requestUser) }
                     })
@@ -23,14 +25,12 @@ export const getProfile = (req: RequestUser, res: Response) => {
 };
 
 export const followProfile = (req: RequestUser, res: Response) => {
-    let profileUser: Users;
     return getUserByName(req.params.username)
-        .then(user => {
-            profileUser = user;
+        .then((profileUser: Users) => {
             followProfileService(req, profileUser, res)
-                .then(user => {
+                .then((user: Users) => {
                 return res.status(200).send({
-                    profile: { ...user.sendAsProfileResult(profileUser), following: true }
+                    profile: { ...user.sendAsProfileResult(profileUser, user), following: true }
                 })
             })
         })
@@ -38,14 +38,12 @@ export const followProfile = (req: RequestUser, res: Response) => {
 };
 
 export const unFollowProfile = (req: RequestUser, res: Response) => {
-    let profileUser: Users;
     return getUserByName(req.params.username)
-        .then(user => {
-            profileUser = user;
+        .then((profileUser: Users) => {
             unFollowProfileService(req, profileUser, res)
-                .then(user => {
+                .then((user: Users) => {
                     return res.status(200).send({
-                        profile: { ...user.sendAsProfileResult(profileUser), following: false }
+                        profile: { ...user.sendAsProfileResult(profileUser, user), following: false }
                     })
                 })
         })

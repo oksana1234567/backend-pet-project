@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Comments from '../shared/interfaces/comment.interface';
 
 let CommentSchema = new mongoose.Schema({
       id: Object,
@@ -13,7 +14,7 @@ let CommentSchema = new mongoose.Schema({
       }
 });
 
-CommentSchema.methods.sendAsResult = function ( comment: any ) {
+CommentSchema.methods.sendAsResult = function (comment: Comments["comment"]) {
       return {
             id: comment._id,
             createdAt: comment.createdAt,

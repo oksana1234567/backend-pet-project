@@ -1,6 +1,5 @@
 import { Request } from "express";
 
-
 export const limitOffsetHandler = (limit: number, offset: number, req: Request) => {
     if (typeof req.query.limit !== 'undefined') {
         limit = Number(req.query.limit);
