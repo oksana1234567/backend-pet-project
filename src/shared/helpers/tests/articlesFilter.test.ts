@@ -1,5 +1,5 @@
 const articleFilterHelper = require('../filters/articlesFilter');
-import { requireMock, articlesMock, userMock } from '../../mockes/mockes';
+import { requestMock, articlesMock, userMock } from '../../mockes/mockes';
 
 describe("Check method 'filterFavoritedArticles' ", () => {
   test('should return correct value', () => {
@@ -17,7 +17,7 @@ describe("Check method 'filterOwnArticles' ", () => {
 
 describe("Check method 'filterFeedArticles' ", () => {
   test('should return correct value', () => {
-    const result = articleFilterHelper.filterFeedArticles(articlesMock, requireMock);
+    const result = articleFilterHelper.filterFeedArticles(articlesMock, requestMock);
     expect(result).toEqual(expect.arrayContaining(articlesMock));
   });
 });

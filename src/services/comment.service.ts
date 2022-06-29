@@ -41,9 +41,8 @@ export const deleteCommentService = (req: RequestUser, res: Response) => {
         .then((article) => {
             if (filterAuthorComments(article, req.user!.username).length) {
                 article.comments = filterCommentsToDelete(article.comments, req);
-                return article.comments;
             }
-            article.save();
+            return article.save();
         }
         ).catch((err: Error) => errorHandler(err, res));
     return getArticleBySlug(req);

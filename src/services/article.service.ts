@@ -66,12 +66,13 @@ export const deleteArticleService = (req: RequestUser, res: Response) => {
 export const favoriteArticleService = (req: RequestUser, res: Response) => {
     return getArticleBySlug(req)
         .then((article) => {
-            getUserByName(req.user!.username.toString())
+            return getUserByName(req.user!.username.toString())
                 .then((user) => {
                     if (!checkFavorite(user, article)) {
                         doFavorite(user, article);
                         user.save();
                         article.save();
+                        return;
                     }
                 }).catch((err: Error) => { return errorHandler(err, res) });
         }).catch((err: Error) => { return errorHandler(err, res) });

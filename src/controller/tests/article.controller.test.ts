@@ -4,18 +4,19 @@ const tagsEntity = require('../../entities/tags');
 const articlesFilter = require('../../shared/helpers/filters/articlesFilter');
 const articleService = require('../../services/article.service');
 const profileService = require('../../services/profile.service');
-import { requireMock, responseMock, articlesMock, userMock } from '../../shared/mockes/mockes';
+
+import { requestMock, responseMock, articlesMock, userMock } from '../../shared/mockes/mockes';
 
 describe("Check method 'postArticle' of articleController", () => {
   test('should return Promise', async () => {
     jest.spyOn(articleService, 'postArticleService').mockResolvedValue(articlesMock);
-    const result = articleController.postArticle(requireMock, responseMock);
+    const result = articleController.postArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
     jest.spyOn(articleService, 'postArticleService').mockRejectedValue(new Error);
-    const result = articleController.postArticle(requireMock, responseMock);
+    const result = articleController.postArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
@@ -24,14 +25,14 @@ describe("Check method 'getArticle' of articleController", () => {
   test('should return Promise', async () => {
     jest.spyOn(articleEntity, 'getArticleBySlug').mockResolvedValue(articlesMock);
     jest.spyOn(profileService, 'getProfileService').mockResolvedValue(userMock);
-    const result = articleController.getArticle(requireMock, responseMock);
+    const result = articleController.getArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
 
 describe("Check method 'updateArticle' of articleController", () => {
   test('should return Promise', async () => {
-    const result = articleController.updateArticle(requireMock, responseMock);
+    const result = articleController.updateArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
@@ -41,13 +42,13 @@ describe("Check method 'getArticles' of articleController", () => {
     jest.spyOn(articleEntity, 'getAllArticles').mockResolvedValue(articlesMock);
     jest.spyOn(articleService, 'getFavoritedArticlesService').mockResolvedValue(articlesMock);
     jest.spyOn(articlesFilter, 'filterOwnArticles').mockResolvedValue(articlesMock);
-    const result = articleController.getArticles(requireMock, responseMock);
+    const result = articleController.getArticles(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
     jest.spyOn(articleEntity, 'getAllArticles').mockRejectedValue(new Error);
-    const result = articleController.getArticles(requireMock, responseMock);
+    const result = articleController.getArticles(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
@@ -56,7 +57,7 @@ describe("Check method 'getArticlesFeed' of articleController", () => {
   test('should return Promise', async () => {
     jest.spyOn(articleEntity, 'getArticlesForFeed').mockResolvedValue(articlesMock);
     jest.spyOn(articlesFilter, 'filterFeedArticles').mockReturnValue(articlesMock);
-    const result = articleController.getArticlesFeed(requireMock, responseMock);
+    const result = articleController.getArticlesFeed(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
@@ -71,34 +72,34 @@ describe("Check method 'getArticlesFeed' of articleController", () => {
   test('should catch Error', async () => {
     jest.spyOn(articleEntity, 'getArticlesForFeed').mockRejectedValue(new Error);
     jest.spyOn(articlesFilter, 'filterFeedArticles').mockReturnValue(articlesMock);
-    const result = articleController.getArticlesFeed(requireMock, responseMock);
+    const result = articleController.getArticlesFeed(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
 
 describe("Check method 'deleteArticle' of articleController", () => {
   test('should return Promise', async () => {
-    const result = articleController.deleteArticle(requireMock, responseMock);
+    const result = articleController.deleteArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
     jest.spyOn(articleService, 'deleteArticleService').mockRejectedValue(new Error);
-    const result = articleController.deleteArticle(requireMock, responseMock);
+    const result = articleController.deleteArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
 
 describe("Check method 'favoriteArticle' of articleController", () => {
   test('should return Promise', async () => {
-    const result = articleController.favoriteArticle(requireMock, responseMock);
+    const result = articleController.favoriteArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
 
 describe("Check method 'unFavoriteArticle' of articleController", () => {
   test('should return Promise', async () => {
-    const result = articleController.unFavoriteArticle(requireMock, responseMock);
+    const result = articleController.unFavoriteArticle(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
@@ -106,13 +107,13 @@ describe("Check method 'unFavoriteArticle' of articleController", () => {
 describe("Check method 'getTags' of articleController", () => {
   test('should return Promise', async () => {
     jest.spyOn(tagsEntity, 'getTagsDB').mockResolvedValue(['tags']);
-    const result = articleController.getTags(requireMock, responseMock);
+    const result = articleController.getTags(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 
   test('should catch Error', async () => {
     jest.spyOn(tagsEntity, 'getTagsDB').mockRejectedValue(new Error);
-    const result = articleController.getTags(requireMock, responseMock);
+    const result = articleController.getTags(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });

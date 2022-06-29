@@ -28,7 +28,7 @@ import { checkFavorite } from '../shared/helpers/favoriteHandler/favorite';
 export const postArticle = (req: RequestUser, res: Response) => {
     return postArticleService(req)
         .then((article: Articles) => {
-            res.status(201).send({
+            return res.status(201).send({
                 article: article.sendAsResult(article)
             })
         }
@@ -132,7 +132,7 @@ export const deleteArticle = (req: RequestUser, res: Response) => {
 export const favoriteArticle = (req: RequestUser, res: Response) => {
     return favoriteArticleService(req, res)
         .then(() => {
-            getArticleBySlug(req).then((article) => {
+            return getArticleBySlug(req).then((article) => {
                 return res.status(200).send({
                     article: article.sendAsResult(article)
                 })

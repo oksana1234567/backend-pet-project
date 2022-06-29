@@ -16,7 +16,7 @@ let CommentSchema = new mongoose.Schema({
 
 CommentSchema.methods.sendAsResult = function (comment: Comments["comment"]) {
       return {
-            id: comment._id,
+            id: comment.id,
             createdAt: comment.createdAt,
             updatedAt: comment.updatedAt,
             body: comment.body,

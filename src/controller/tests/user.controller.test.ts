@@ -1,12 +1,13 @@
 const userController = require('../user.controller');
-const userService = require('../../services/user.service')
-import { requireMock, responseMock, userMock } from '../../shared/mockes/mockes';
+const userService = require('../../services/user.service');
+
+import { requestMock, responseMock, userMock } from '../../shared/mockes/mockes';
 import { spyOnGetUserByName } from '../../shared/mockes/functionMockes';
 
 describe("Check method 'getUser' of UserController", () => {
   test('should return correct value', async () => {
     spyOnGetUserByName().mockResolvedValue(userMock);
-    const result = userController.getUser(requireMock, responseMock);
+    const result = userController.getUser(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
@@ -14,7 +15,7 @@ describe("Check method 'getUser' of UserController", () => {
 describe("Check method 'signUp' ", () => {
   test('should catch Error', async () => {
     const spyResult = jest.spyOn(userService, 'createUserService').mockRejectedValue(new Error);
-    const result = userController.signUp(requireMock, responseMock);
+    const result = userController.signUp(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });
@@ -22,7 +23,7 @@ describe("Check method 'signUp' ", () => {
 describe("Check method 'updateUser' of UserController", () => {
   test('should return correct value', async () => {
     spyOnGetUserByName().mockResolvedValue(userMock);
-    const result = userController.updateUser(requireMock, responseMock);
+    const result = userController.updateUser(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });
 });

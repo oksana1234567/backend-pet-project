@@ -2,7 +2,7 @@ import { Users } from "./user.interface";
 
 interface Comments {
     comment: {
-        _id: Number,
+        id: Number,
         createdAt: String,
         updatedAt: String,
         body: String,

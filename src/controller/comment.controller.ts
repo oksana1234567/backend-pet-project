@@ -34,4 +34,3 @@ export const getComments = (req: Request, res: Response) => {
         })
         .catch((err: Error) => errorHandler(err, res));
 };
-

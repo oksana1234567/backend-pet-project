@@ -20,24 +20,3 @@ export const mockArticleModelSave = () => {
 export const mockUserModelSave = () => {
   mockingoose(User).toReturn(userMock, 'save');
 };
-
-export const articleEntityToTest = () => {
-  new Article({
-    slug: 'test-111',
-    title: 'title new',
-    description: 'description',
-    body: 'body',
-    tagList: ['tagList'],
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    favorited: false,
-    favoritesCount: 0,
-    author: {
-      username: 'username',
-      bio: 'bio',
-      image: 'image',
-      following: false,
-    }
-  }
-  ).save();
-};

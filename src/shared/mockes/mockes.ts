@@ -1,5 +1,5 @@
 
-export const requireMock = {
+export const requestMock = {
     query: {
         favorited: 'username',
         author: {

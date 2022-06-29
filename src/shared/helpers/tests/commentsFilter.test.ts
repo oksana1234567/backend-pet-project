@@ -1,5 +1,5 @@
 const commentsFilterHelper = require('../filters/commentsFilter');
-import { articlesMock, requireMock } from '../../mockes/mockes';
+import { articlesMock, requestMock } from '../../mockes/mockes';
 
 describe("Check method 'filterAuthorComments' ", () => {
   test('should return correct value', () => {
@@ -18,7 +18,7 @@ describe("Check method 'makeCommentsArray' ", () => {
 
 describe("Check method 'filterCommentsToDelete' ", () => {
   test('should return correct value', () => {
-    const result = commentsFilterHelper.filterCommentsToDelete(articlesMock[0].comments, requireMock);
+    const result = commentsFilterHelper.filterCommentsToDelete(articlesMock[0].comments, requestMock);
     expect(result).toBeInstanceOf(Array);
   });
 });
