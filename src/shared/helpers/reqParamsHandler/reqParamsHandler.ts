@@ -1,14 +1,13 @@
 import { Request } from "express";
 
-export const limitOffsetHandler = (limit: number, offset: number, req: Request) => {
-    if (typeof req.query.limit !== 'undefined') {
-        limit = Number(req.query.limit);
-    };
+export const limitHandler = (req: Request) => {
+    const limit = Number(req.query.limit);
+    return limit;
+};
 
-    if (typeof req.query.offset !== 'undefined') {
-        offset = Number(req.query.offset);
-    };
-    return { limit, offset };
+export const offsetHandler = (req: Request) => {
+    const offset = Number(req.query.offset);
+    return offset;
 };
 
 export const tagHandler = (query: any, req: Request) => {

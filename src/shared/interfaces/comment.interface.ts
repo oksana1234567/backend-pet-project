@@ -2,15 +2,15 @@ import { Users } from "./user.interface";
 
 interface Comments {
     comment: {
-        id: Number,
-        createdAt: String,
-        updatedAt: String,
-        body: String,
+        id: number,
+        createdAt: string,
+        updatedAt: string,
+        body: string,
         author: {
-            username: String,
-            bio: String,
-            image: String,
-            following: Boolean
+            username: string,
+            bio: string,
+            image: string,
+            following: boolean
         }
     }
 };

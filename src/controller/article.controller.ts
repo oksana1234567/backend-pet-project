@@ -40,7 +40,7 @@ export const getArticle = (req: RequestUser, res: Response) => {
         .then((article: Articles) => {
 
             if (req.rawHeaders[0] === 'Authorization') {
-                return getProfileService(req, res)
+                return getProfileService(req)
                     .then(user => {
                         return res.status(200).send({
                             article: {
@@ -62,7 +62,7 @@ export const getArticle = (req: RequestUser, res: Response) => {
 export const updateArticle = (req: RequestUser, res: Response) => {
     return getArticleBySlug(req)
         .then((article: Articles) => {
-            updateArticleService(req, res, article);
+            updateArticleService(req, article);
             return res.status(200).send({
                 article: article.sendAsResult(article)
             })
@@ -77,7 +77,7 @@ export const getArticles = (req: RequestUser, res: Response) => {
         .then((articles: Articles[]) => {
 
             if (favorites) {
-                getFavoritedArticlesService(favorites.toString(), articles, res)
+                getFavoritedArticlesService(favorites.toString(), articles)
                     .then(articlesFavorited => {
                         return res.status(200).send({
                             articles: articlesFavorited,
@@ -123,14 +123,14 @@ export const getArticlesFeed = (req: RequestUser, res: Response) => {
 };
 
 export const deleteArticle = (req: RequestUser, res: Response) => {
-    return deleteArticleService(req, res)
+    return deleteArticleService(req)
         .then(() => {
             return res.status(200).send()
         }).catch((err: Error) => errorHandler(err, res));
 };
 
 export const favoriteArticle = (req: RequestUser, res: Response) => {
-    return favoriteArticleService(req, res)
+    return favoriteArticleService(req)
         .then(() => {
             return getArticleBySlug(req).then((article) => {
                 return res.status(200).send({
@@ -141,10 +141,12 @@ export const favoriteArticle = (req: RequestUser, res: Response) => {
 };
 
 export const unFavoriteArticle = (req: RequestUser, res: Response) => {
-    return unFavoriteArticleService(req, res)
-        .then(article => {
-            return res.status(200).send({
-                article: article.sendAsResult(article)
+    return unFavoriteArticleService(req)
+        .then(() => {
+            return getArticleBySlug(req).then((article) => {
+                return res.status(200).send({
+                    article: article.sendAsResult(article)
+                })
             })
         }).catch((err: Error) => errorHandler(err, res));
 };

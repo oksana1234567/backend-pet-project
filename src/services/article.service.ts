@@ -1,5 +1,4 @@
 import Article from '../models/article.model';
-import { Response } from "express";
 import { slugify } from '../shared/helpers/modelsFieldsHandler/slugify';
 import RequestUser from '../shared/interfaces/requestUser.interface';
 import Articles from '../shared/interfaces/article.interface';
@@ -7,7 +6,6 @@ import { updateDate } from '../shared/helpers/modelsFieldsHandler/updateDate';
 import { getArticleBySlug } from '../entities/article';
 import { checkFavorite, doFavorite, doUnFavorite } from '../shared/helpers/favoriteHandler/favorite';
 import { getUserByName } from '../entities/user';
-import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
 import { filterFavoritedArticles } from '../shared/helpers/filters/articlesFilter';
 
 
@@ -32,7 +30,7 @@ export const postArticleService = (req: RequestUser) => {
     ).save()
 };
 
-export const updateArticleService = (req: RequestUser, res: Response, article: Articles) => {
+export const updateArticleService = (req: RequestUser, article: Articles) => {
     if (req.user && article.author.username === req.user.username) {
         if (typeof req.body.article.title !== 'undefined') {
             article.title = req.body.article.title;
@@ -54,16 +52,16 @@ export const updateArticleService = (req: RequestUser, res: Response, article: A
     } return article;
 };
 
-export const deleteArticleService = (req: RequestUser, res: Response) => {
+export const deleteArticleService = (req: RequestUser) => {
     return getArticleBySlug(req)
         .then((article) => {
             if (req.user && article.author.username === req.user.username) {
                 return article.remove(req.params.slug);
             }
-        }).catch((err: Error) => errorHandler(err, res));
+        })
 };
 
-export const favoriteArticleService = (req: RequestUser, res: Response) => {
+export const favoriteArticleService = (req: RequestUser) => {
     return getArticleBySlug(req)
         .then((article) => {
             return getUserByName(req.user!.username.toString())
@@ -74,13 +72,12 @@ export const favoriteArticleService = (req: RequestUser, res: Response) => {
                         article.save();
                         return;
                     }
-                }).catch((err: Error) => { return errorHandler(err, res) });
-        }).catch((err: Error) => { return errorHandler(err, res) });
-    // return getArticleBySlug(req);
+                })
+        })
 };
 
-export const unFavoriteArticleService = (req: RequestUser, res: Response) => {
-    getArticleBySlug(req)
+export const unFavoriteArticleService = (req: RequestUser) => {
+    return getArticleBySlug(req)
         .then((article) => {
             getUserByName(req.user!.username.toString())
                 .then((user) => {
@@ -89,15 +86,14 @@ export const unFavoriteArticleService = (req: RequestUser, res: Response) => {
                         user.save();
                         article.save();
                     }
-                }).catch((err: Error) => errorHandler(err, res));
-        }).catch((err: Error) => errorHandler(err, res));
-    return getArticleBySlug(req);
+                })
+        })
 };
 
-export const getFavoritedArticlesService = (username: string, articles: Articles[], res: Response) => {
+export const getFavoritedArticlesService = (username: string, articles: Articles[]) => {
     return getUserByName(username)
         .then(user => {
             articles = filterFavoritedArticles(articles, user);
             return articles;
-        }).catch((err: Error) => errorHandler(err, res))
+        })
 };

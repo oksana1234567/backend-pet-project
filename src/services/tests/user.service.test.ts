@@ -1,4 +1,4 @@
-import { requestMock, responseMock, userMock } from '../../shared/mockes/mockes';
+import { requestMock, userMock } from '../../shared/mockes/mockes';
 import { spyOnGetUserByName, mockUserModelSave } from '../../shared/mockes/functionMockes';
 
 const userService = require('../user.service');
@@ -8,7 +8,7 @@ describe("Check method 'updateUserService' of userService", () => {
     mockUserModelSave();
     spyOnGetUserByName().mockResolvedValue(userMock);
     jest.spyOn(userService, 'updateUserService')
-    const result = await userService.updateUserService(requestMock, responseMock);
+    const result = await userService.updateUserService(requestMock);
     expect(result).toBeInstanceOf(Object)
   });
 });

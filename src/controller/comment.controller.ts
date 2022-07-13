@@ -7,7 +7,7 @@ import { deleteCommentService, postCommentService } from "../services/comment.se
 import Articles from "../shared/interfaces/article.interface";
 
 export const postComment = (req: RequestUser, res: Response) => {
-    return postCommentService(req, res)
+    return postCommentService(req)
         .then(() => {
             getArticleBySlug(req)
                 .then((article: Articles) => {
@@ -19,7 +19,7 @@ export const postComment = (req: RequestUser, res: Response) => {
 };
 
 export const deleteComment = (req: RequestUser, res: Response) => {
-    return deleteCommentService(req, res)
+    return deleteCommentService(req)
         .then(() => {
             return res.status(200).send();
         }).catch((err: Error) => errorHandler(err, res));

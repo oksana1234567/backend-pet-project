@@ -1,6 +1,6 @@
 import { Request } from "express"
 import Article from "../models/article.model"
-import { limitOffsetHandler, tagHandler } from "../shared/helpers/reqParamsHandler/reqParamsHandler";
+import { limitHandler, offsetHandler, tagHandler } from "../shared/helpers/reqParamsHandler/reqParamsHandler";
 import RequestUser from "../shared/interfaces/requestUser.interface";
 
 export const getArticleBySlug = (req: Request) => {
@@ -11,25 +11,23 @@ export const getArticleBySlug = (req: Request) => {
 
 export const getAllArticles = (req: Request) => {
     let query: any = {};
-    let limit = 20;
-    let offset = 0;
+    let limit = limitHandler(req);
+    let offset = offsetHandler(req);
 
-    limitOffsetHandler(limit, offset, req);
     tagHandler(query, req);
     
     return Article.find(query)
-        .limit(limit)
         .skip(offset)
+        .limit(limit)
         .exec()
 };
 
 export const getArticlesForFeed = (req: RequestUser) => {
-    let limit = 20;
-    let offset = 0;
+    let limit = limitHandler(req);
+    let offset = offsetHandler(req);
 
-    limitOffsetHandler(limit, offset, req);
     return Article.find({ username: { $in: req.user!.following } })
-        .limit(limit)
         .skip(offset)
+        .limit(limit)
         .exec()
 };

@@ -1,9 +1,9 @@
 
 interface Profile {
-        username: String,
-        bio: String,
-        image: String,
-        following: Boolean,
+        username: string,
+        bio: string,
+        image: string,
+        following: boolean,
 };
 
 export default Profile;

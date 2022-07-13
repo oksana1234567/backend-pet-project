@@ -12,7 +12,7 @@ import { Users } from "../shared/interfaces/user.interface";
 
 
 export const getProfile = (req: RequestUser, res: Response) => {
-    getProfileService(req, res)
+    getProfileService(req)
         .then((requestUser: Users) => {
             getUserByName(req.params.username)
                 .then((userProfile: Users) => {
@@ -27,7 +27,7 @@ export const getProfile = (req: RequestUser, res: Response) => {
 export const followProfile = (req: RequestUser, res: Response) => {
     return getUserByName(req.params.username)
         .then((profileUser: Users) => {
-            followProfileService(req, profileUser, res)
+            followProfileService(req, profileUser)
                 .then((user: Users) => {
                 return res.status(200).send({
                     profile: { ...user.sendAsProfileResult(profileUser, user), following: true }
@@ -40,7 +40,7 @@ export const followProfile = (req: RequestUser, res: Response) => {
 export const unFollowProfile = (req: RequestUser, res: Response) => {
     return getUserByName(req.params.username)
         .then((profileUser: Users) => {
-            unFollowProfileService(req, profileUser, res)
+            unFollowProfileService(req, profileUser)
                 .then((user: Users) => {
                     return res.status(200).send({
                         profile: { ...user.sendAsProfileResult(profileUser, user), following: false }

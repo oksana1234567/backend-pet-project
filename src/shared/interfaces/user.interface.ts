@@ -1,11 +1,11 @@
 import Articles from "./article.interface"
 
 export interface Users {
-    username: String,
-    email: String,
-    password: String,
-    bio: String,
-    image: String,
+    username: string,
+    email: string,
+    password: string,
+    bio: string,
+    image: string,
     favorites: Array<{ article: Articles }>,
     following: Array<Users>,
     sendAsUserResult(user: Users): Users,
@@ -13,10 +13,10 @@ export interface Users {
 };
 
 export interface UserResponse {
-    username: String,
-    email: String,
-    bio: String,
-    image: String
+    username: string,
+    email: string,
+    bio: string,
+    image: string
 };
 
 

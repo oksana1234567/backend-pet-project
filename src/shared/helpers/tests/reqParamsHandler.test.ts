@@ -9,9 +9,16 @@ describe("Check method 'makeCommentsArray' ", () => {
   });
 });
 
-describe("Check method 'limitOffsetHandler' ", () => {
+describe("Check method 'limitHandler' ", () => {
   test('should return correct value', () => {
-    const result = reqParamsHandler.limitOffsetHandler(1, 1, requestMock);
-    expect(result).toMatchObject({ "limit": 1, "offset": 1 });
+    const result = reqParamsHandler.limitHandler(requestMock);
+    expect(result).toBe(1);
+  });
+});
+
+describe("Check method 'offsetHandler' ", () => {
+  test('should return correct value', () => {
+    const result = reqParamsHandler.offsetHandler(requestMock);
+    expect(result).toBe(1);
   });
 });

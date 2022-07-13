@@ -1,14 +1,12 @@
 
 import { getArticleBySlug } from '../entities/article';
 import Comment from '../models/comment.model';
-import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
 import { findFollowedAuthor } from '../shared/helpers/filters/findFollowedAuthor';
 import { filterCommentsToDelete, filterAuthorComments } from '../shared/helpers/filters/commentsFilter';
 import RequestUser from '../shared/interfaces/requestUser.interface';
-import { Response } from "express";
 
 
-export const postCommentService = (req: RequestUser, res: Response) => {
+export const postCommentService = (req: RequestUser) => {
     let finallComment = {};
     return getArticleBySlug(req)
         .then((article) => {
@@ -33,10 +31,10 @@ export const postCommentService = (req: RequestUser, res: Response) => {
             article.comments.push({ comment: finallComment });
             article.save();
             return;
-        }).catch((err: Error) => errorHandler(err, res));
+        })
 };
 
-export const deleteCommentService = (req: RequestUser, res: Response) => {
+export const deleteCommentService = (req: RequestUser) => {
     getArticleBySlug(req)
         .then((article) => {
             if (filterAuthorComments(article, req.user!.username).length) {
@@ -44,6 +42,6 @@ export const deleteCommentService = (req: RequestUser, res: Response) => {
             }
             return article.save();
         }
-        ).catch((err: Error) => errorHandler(err, res));
+        )
     return getArticleBySlug(req);
 };

@@ -2,22 +2,22 @@ import Comments from "./comment.interface";
 
 interface Articles {
         slug: StringConstructor,
-        title: String,
-        description: String,
-        body: String,
-        tagList: [String],
-        createdAt: String,
-        updatedAt: String,
-        favorited: Boolean,
+        title: string,
+        description: string,
+        body: string,
+        tagList: [string],
+        createdAt: string,
+        updatedAt: string,
+        favorited: boolean,
         favoritesCount: number,
         comments: Array<Comments>,
         author: {
-            username: String,
-            bio: String,
-            image: String,
-            following: Boolean
+            username: string,
+            bio: string,
+            image: string,
+            following: boolean
         },
-        _id: String,
+        _id: string,
         sendAsResult(article: Articles ): Articles,
         save(): Promise<Articles>
 };

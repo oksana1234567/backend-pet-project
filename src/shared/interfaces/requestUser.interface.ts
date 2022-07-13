@@ -4,15 +4,15 @@ import { Users } from "./user.interface";
 
 interface RequestUser extends Request {
     user?: {
-    username: String,
-    email: String,
-    password: String,
-    bio: String,
-    image: String,
-    favorites: Array<Users>,
+    username: string,
+    email: string,
+    password: string,
+    bio: string,
+    image: string,
+    favorites: Array<Articles>,
     following: Array<Users>,
     },
-    token?: String,
+    token?: string,
 };
 
 export default RequestUser;

@@ -97,5 +97,4 @@ describe("User endpoints testing: ", () => {
       .send({ user: { invalidField: 'invalid value' } })
       .expect(500)
   });
-  
 });

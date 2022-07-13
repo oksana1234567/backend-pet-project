@@ -43,7 +43,7 @@ export const getUser = (req: RequestUser, res: Response) => {
 export const updateUser = (req: RequestUser, res: Response) => {
     return getUserByName(req.user!.username.toString())
         .then((user: Users) => {
-            updateUserService(req, res);
+            updateUserService(req);
             return res.status(200).send({
                 user: { ...user.sendAsUserResult(user), token: createToken(user.username) }
             })

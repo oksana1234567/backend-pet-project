@@ -14,7 +14,7 @@ describe("Check method 'getUser' of UserController", () => {
 
 describe("Check method 'signUp' ", () => {
   test('should catch Error', async () => {
-    const spyResult = jest.spyOn(userService, 'createUserService').mockRejectedValue(new Error);
+    jest.spyOn(userService, 'createUserService').mockRejectedValue(new Error);
     const result = userController.signUp(requestMock, responseMock);
     expect(result.constructor.name).toBe('Promise');
   });

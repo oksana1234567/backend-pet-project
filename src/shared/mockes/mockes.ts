@@ -69,6 +69,7 @@ export const articlesMock = [{
         }
     }],
     save: () => { },
+    remove: () => { },
     _id: 'id',
     favorited: false,
     favoritesCount: 0
@@ -80,9 +81,10 @@ export const userMock = {
     password: 'password',
     bio: 'bio',
     image: 'image',
-    favorites: [{ article: { _id: '111', slug: 'slug'  } }],
+    favorites: [{ article: { _id: '111', slug: 'slug' } }],
     following: [],
     sendAsProfileResult: () => { },
+    save: () => { },
     _conditions: { username: 'test' }
 };
 

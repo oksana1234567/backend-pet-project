@@ -111,15 +111,6 @@ describe("Article route testing: ", () => {
       .send({ article: { description: 'new description' } })
     expect(result.constructor.name).toBe('Response');
   });
-  
-  test("check route '/api/articles/:slug', method 'put' - should not update the article - the Error", async () => {
-    const result = await request(app)
-      .put('/api/articles/test-111')
-      .set('Authorization', token)
-      .send({invalid: {invalid: 'invalid'}})
-      .expect(422)
-    expect(result.text).toMatch('errors')
-  });
 
   test("check route '/api/articles/:slug', method 'delete' - should delete the article", async () => {
     const result = await request(app)
