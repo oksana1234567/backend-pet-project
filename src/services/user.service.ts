@@ -1,24 +1,9 @@
 
-import User from '../models/user.model';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
 import { Request } from "express";
-import RequestUser from '../shared/interfaces/requestUser.interface';
-import { getToken } from '../shared/helpers/authHandler/getToken';
-import { getUserByName } from '../entities/user';
-
-export const getUserFromRequest = (req: RequestUser) => {
-    let user: any;
-    const token = getToken(req);
-
-    if (!token) { return } else {
-    const nodeEnv: string = (process.env.JWT_SECRET as string);
-        jwt.verify(token, nodeEnv, async (err, decoded: any) => {
-            user = User.findOne({ username: decoded.username, 'tokens.token': token })
-        });
-        return user;
-    };
-};
+import User from '../models/user.model';
+import bcrypt from 'bcryptjs';
+import { getUserByToken } from '../entities/user';
+import { Users } from "../shared/interfaces/user.interface";
 
 export const createUserService = (req: Request) => {
     return new User({
@@ -30,9 +15,8 @@ export const createUserService = (req: Request) => {
     }).save()
 };
 
-export const updateUserService = (req: RequestUser) => {
-    getUserByName(req.user!.username.toString())
-        .then(user => {
+export const updateUserService = (req: Request) => {
+    getUserByToken(req).then((user: Users) => {
             if (typeof req.body.user.username !== 'undefined') {
                 user.username = req.body.user.username;
             }
@@ -47,5 +31,5 @@ export const updateUserService = (req: RequestUser) => {
             }
             user.save();
         });
-    return getUserByName(req.user!.username.toString());
+    return getUserByToken(req);
 };

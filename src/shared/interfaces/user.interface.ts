@@ -9,7 +9,8 @@ export interface Users {
     favorites: Array<{ article: Articles }>,
     following: Array<Users>,
     sendAsUserResult(user: Users): Users,
-    sendAsProfileResult(userProfile: Users, userRequest: Users): Users
+    sendAsProfileResult(userProfile: Users, userRequest: Users): Users,
+    save(): Promise<Users>
 };
 
 export interface UserResponse {

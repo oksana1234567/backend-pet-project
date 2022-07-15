@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
+const userEntity = require('../src/entities/user');
+const profileService = require('../src/services/profile.service');
 
-import { getMockReq } from '@jest-mock/express'
 import request from "supertest";
 
 import app from "../app";
 import User from '../src/models/user.model';
-import { requestMock, token } from '../src/shared/mockes/mockes';
+import { token, userMock } from '../src/shared/mockes/mockes';
 
 beforeAll((done) => {
   mongoose.connect('mongodb://localhost:27017/JestDB',
     { useNewUrlParser: true },
     () => done());
-  
-  getMockReq(requestMock);
 
   new User({
     username:'test',
@@ -32,25 +31,31 @@ afterAll((done) => {
 describe("Profile endpoints testing: ", () => {
 
   test("check route '/api/profiles/:username', method 'get' - should get the Profile", async () => {
+    jest.spyOn(userEntity, 'getUserByToken').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByName').mockResolvedValue(userMock);
     const result = await request(app)
       .get('/api/profiles/test')
+      .set('Authorization', token)
+      .expect(200)
     expect(result.constructor.name).toBe('Response');
+    expect(result.text).toMatch('profile');
   });
   
-  test("check route '/api/profiles/:username', method 'get' - should not get the Profile - the Error", async () => {
-    await request(app)
-      .get('/api/profiles/Wrong')
-      .expect(500)
-  });
 
   test("check route '/api/profiles/:username/follow', method 'post' - should follow the profile", async () => {
+    jest.spyOn(profileService, 'followProfileService').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByName').mockResolvedValue(userMock);
     const result = await request(app)
       .post('/api/profiles/test/follow')
       .set('Authorization', token)
+      .expect(200)
     expect(result.constructor.name).toBe('Response');
+    expect(result.text).toMatch('profile');
   });
   
   test("check route '/api/profiles/:username/follow', method 'post' - should not follow the profile - the Error", async () => {
+    jest.spyOn(profileService, 'followProfileService').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByName').mockRejectedValue(new Error)
     await request(app)
       .post('/api/profiles/Wrong/follow')
       .set('Authorization', token)
@@ -58,13 +63,19 @@ describe("Profile endpoints testing: ", () => {
   });
 
   test("check route '/api/profiles/:username/follow', method 'delete' - should delete following the profile", async () => {
+    jest.spyOn(profileService, 'unFollowProfileService').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByName').mockResolvedValue(userMock);
     const result = await request(app)
       .delete('/api/profiles/test/follow')
       .set('Authorization', token)
+      .expect(200)
     expect(result.constructor.name).toBe('Response');
+    expect(result.text).toMatch('profile');
   });
   
   test("check route '/api/profiles/:username/follow', method 'delete' - should not delete following the profile - the Error", async () => {
+    jest.spyOn(profileService, 'unFollowProfileService').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByName').mockRejectedValue(new Error)
     await request(app)
       .delete('/api/profiles/Wrong/follow')
       .set('Authorization', token)

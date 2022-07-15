@@ -13,6 +13,10 @@ export const spyOnGetUserByName = () => {
   return jest.spyOn(userEntity, 'getUserByName');
 };
 
+export const spyOnGetUserByToken = () => {
+  return jest.spyOn(userEntity, 'getUserByToken');
+};
+
 export const mockArticleModelSave = () => {
   return mockingoose(Article).toReturn(articlesMock, 'save');
 };

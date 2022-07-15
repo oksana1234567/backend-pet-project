@@ -1,23 +1,18 @@
-import { getUserByName } from "../entities/user";
-import RequestUser from "../shared/interfaces/requestUser.interface";
+import { Request } from "express";
+import { getUserByToken } from "../entities/user";
 import { Users } from "../shared/interfaces/user.interface";
-import { getUserFromRequest } from "./user.service";
 
-export const getProfileService = (req: RequestUser) => {
-    return getUserByName(getUserFromRequest(req)._conditions.username);
-};
-
-export const followProfileService = (req: RequestUser, profileUser: Users) => {
-    return getUserByName(req.user!.username.toString())
-        .then(user => {
+export const followProfileService = (req: Request, profileUser: Users) => {
+    return getUserByToken(req)
+        .then((user: Users) => {
             user.following.push(profileUser);
             return user.save()
         })
 };
 
-export const unFollowProfileService = (req: RequestUser, profileUser: Users) => {
-    return getUserByName(req.user!.username.toString())
-        .then(user => {
+export const unFollowProfileService = (req: Request, profileUser: Users) => {
+    return getUserByToken(req)
+        .then((user: Users) => {
             user.following.splice(user.following.indexOf(profileUser), 1);
             return user.save()
         });

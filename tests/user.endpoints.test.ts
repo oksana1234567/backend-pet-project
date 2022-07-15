@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+const userEntity = require('../src/entities/user');
 
 import { getMockReq } from '@jest-mock/express'
 import request from "supertest";
 import app from "../app";
 
-import { token, newUserMock, loginUserMock, requestMock } from '../src/shared/mockes/mockes';
+import { token, newUserMock, loginUserMock, requestMock, userMock } from '../src/shared/mockes/mockes';
 
 beforeAll((done) => {
   mongoose.connect('mongodb://localhost:27017/JestDB',
@@ -63,10 +64,13 @@ describe("User endpoints testing: ", () => {
   });
 
   test("check route '/api/user', method 'get' - should get the user", async () => {
+    jest.spyOn(userEntity, 'getUserByToken').mockResolvedValue(userMock);
     const result = await request(app)
       .get('/api/user')
       .set('Authorization', token)
+          .expect(200);
     expect(result.constructor.name).toBe('Response');
+    expect(result.text).toMatch('user');
   });
   
   test("check route '/api/user', method 'get' - should not get the user - the Error", async () => {
@@ -82,19 +86,22 @@ describe("User endpoints testing: ", () => {
   });
 
   test("check route '/api/user', method 'put' - should update the user", async () => {
+    jest.spyOn(userEntity, 'getUserByToken').mockResolvedValue(userMock);
     const result = await request(app)
       .put('/api/user')
       .set('Authorization', token)
       .send({ user: { bio: 'new bio' } })
+      .expect(200);
     expect(result.constructor.name).toBe('Response');
-
+    expect(result.text).toMatch('user');
   });
   
   test("check route '/api/user', method 'put' - should not update the user - the Error", async () => {
+        jest.spyOn(userEntity, 'getUserByToken').mockRejectedValue(new Error);
     await request(app)
       .put('/api/user')
       .set('Authorization', token)
       .send({ user: { invalidField: 'invalid value' } })
-      .expect(500)
+      .expect(422)
   });
 });

@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Request } from "express";
 
 export const getToken = (req: Request) => {
     let token = '';

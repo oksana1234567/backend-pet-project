@@ -1,25 +1,22 @@
 
-import { Response } from "express";
-import IRequestUser from '../shared/interfaces/requestUser.interface';
+import { Response, Request } from "express";
 import { Users } from '../shared/interfaces/user.interface';
 import { createToken } from '../shared/helpers/authHandler/createToken';
 import { errorHandler } from '../shared/helpers/errorHandler/errorHandler';
 import { createUserService, updateUserService } from '../services/user.service';
-import { getUserByEmail, getUserByName } from '../entities/user';
+import { getUserByEmail, getUserByToken } from '../entities/user';
 import { checkIfValidPassword } from '../shared/helpers/authHandler/checkIfValidPassword';
-import RequestUser from "../shared/interfaces/requestUser.interface";
 
-export const signUp = (req: IRequestUser, res: Response) => {
+export const signUp = (req: Request, res: Response) => {
     return createUserService(req)
         .then((user: Users) => {
             return res.status(201).send({
                 user: { ...user.sendAsUserResult(user), token: createToken(user.username) }
             })
-        }
-        ).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };
 
-export const signIn = (req: IRequestUser, res: Response) => {
+export const signIn = (req: Request, res: Response) => {
     return getUserByEmail(req.body.user.email)
         .then((user: Users) => {
             if (!checkIfValidPassword(req, user)) {
@@ -28,24 +25,24 @@ export const signIn = (req: IRequestUser, res: Response) => {
             return res.status(200).send({
                 user: { ...user.sendAsUserResult(user), token: createToken(user.username) }
             })
-        }).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };
 
-export const getUser = (req: RequestUser, res: Response) => {
-     return getUserByName(req.user!.username.toString())
-            .then((user: Users) => {
-                return res.status(200).send({
-                    user: {...user.sendAsUserResult(user), token: req.headers.authorization}
-                })
-            }).catch((err: Error) => errorHandler(err, res));
+export const getUser = (req: Request, res: Response) => {
+    return getUserByToken(req)
+        .then((user: Users) => {
+            return res.status(200).send({
+                user: { ...user.sendAsUserResult(user), token: req.headers.authorization }
+            })
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };
 
-export const updateUser = (req: RequestUser, res: Response) => {
-    return getUserByName(req.user!.username.toString())
+export const updateUser = (req: Request, res: Response) => {
+    return getUserByToken(req)
         .then((user: Users) => {
             updateUserService(req);
             return res.status(200).send({
                 user: { ...user.sendAsUserResult(user), token: createToken(user.username) }
             })
-        }).catch((err: Error) => errorHandler(err, res));
+        }).catch((err: Error) => { return errorHandler(err, res) });
 };
