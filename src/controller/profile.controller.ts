@@ -10,7 +10,7 @@ import { Users } from "../shared/interfaces/user.interface";
 
 
 export const getProfile = (req: Request, res: Response) => {
-    getUserByToken(req)
+    return getUserByToken(req)
         .then((requestUser: Users) => {
             getUserByName(req.params.username)
                 .then((userProfile: Users) => {

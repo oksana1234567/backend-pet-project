@@ -1,5 +1,6 @@
 const profileController = require('../profile.controller');
 const profileService = require('../../services/profile.service');
+const userEntity = require('../../entities/user');
 
 import { requestMock, responseMock, userMock } from '../../shared/mockes/mockes';
 import { spyOnGetUserByName } from '../../shared/mockes/functionMockes';
@@ -38,19 +39,12 @@ describe("Check method 'unFollowProfile' of ProfileController", () => {
 
 describe("Check method 'getProfile' of ProfileController", () => {
   test('should return correct value', async () => {
-    jest.spyOn(profileService, 'getProfileService').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByToken').mockResolvedValue(userMock);
+    jest.spyOn(userEntity, 'getUserByName').mockResolvedValue(userMock);
     spyOnGetUserByName().mockResolvedValue(userMock);
     const result = jest.spyOn(profileController, 'getProfile');
     profileController.getProfile(requestMock, responseMock);
     expect(result).toHaveBeenCalledTimes(1);
-  });
-
-  test('should catch Error', async () => {
-    jest.spyOn(profileService, 'getProfileService').mockRejectedValue(new Error);
-    spyOnGetUserByName().mockResolvedValue(userMock);
-    jest.spyOn(profileController, 'getProfile');
-    const result = profileController.getProfile(requestMock, responseMock);
-    expect(result).toBeFalsy();
   });
 });
 

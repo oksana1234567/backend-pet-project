@@ -63,7 +63,7 @@ export const articlesMock = [{
     comments: [{
         comment: {
             body: 'body',
-            _id: '111',
+            _id: '62d504061c0bdb1ee302de27',
             author: 'username',
             id: '111',
         }
@@ -71,7 +71,7 @@ export const articlesMock = [{
     save: () => { },
     remove: () => { },
     sendAsResult: ({ }) => { },
-    _id: 'id',
+    _id: '62d503db1e844811f12ec2cb',
     favorited: false,
     favoritesCount: 0
 }];
@@ -83,7 +83,7 @@ export const userMock = {
     bio: 'bio',
     image: 'image',
     favorites: [{ article: { _id: '111', slug: 'slug' } }],
-    following: [],
+    following: ['username'],
     sendAsProfileResult: ({}, {}) => { },
     sendAsUserResult: ({}) => { },
     save: () => { },

@@ -17,7 +17,7 @@ describe("Check method 'filterOwnArticles' ", () => {
 
 describe("Check method 'filterFeedArticles' ", () => {
   test('should return correct value', () => {
-    const result = articleFilterHelper.filterFeedArticles(articlesMock, requestMock);
+    const result = articleFilterHelper.filterFeedArticles(articlesMock, requestMock, userMock);
     expect(result).toEqual(expect.arrayContaining(articlesMock));
   });
 });

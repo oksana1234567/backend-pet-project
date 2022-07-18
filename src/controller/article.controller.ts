@@ -47,7 +47,6 @@ export const updateArticle = (req: Request, res: Response) => {
 };
 
 export const getArticlesFeed = (req: Request, res: Response) => {
-    
     getUserByToken(req)
         .then((user: Users) => {
 

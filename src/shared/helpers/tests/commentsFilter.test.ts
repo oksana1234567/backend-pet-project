@@ -10,7 +10,7 @@ describe("Check method 'filterAuthorComments' ", () => {
 
 describe("Check method 'makeCommentsArray' ", () => {
   test('should return correct value', () => {
-    const expected = [{ _id: "111", author: "username", body: "body", id: "111" }];
+    const expected = [{ _id: "62d504061c0bdb1ee302de27", author: "username", body: "body", id: "111" }];
     const result = commentsFilterHelper.makeCommentsArray({ comments: articlesMock[0].comments });
     expect(result).toEqual(expect.arrayContaining(expected));
   });
